@@ -1,9 +1,19 @@
 import React from "react";
 
+
 const Signup = () => {
   return (
     <div>
-      <h1>Signup</h1>
+      <div>
+        <div>
+          <img
+            src="/Images/Masailogo.svg"
+            className="masaiLogo"
+            width={"200px"}
+            alt="masai logo"
+          />
+        </div>
+      </div>
     </div>
   );
 };
