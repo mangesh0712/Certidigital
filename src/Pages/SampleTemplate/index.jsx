@@ -1,10 +1,58 @@
 import { Button, Form, Upload } from "antd";
-import { UploadOutlined, RedoOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import {
+  UploadOutlined,
+  RedoOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
 import "../../Styles/sampleTemplate.css";
 
 const SampleTemplate = () => {
-    const [fileList,setFileList]=useState([])
+  const [fileList, setFileList] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    getImages();
+  }, []);
+
+  const getImages = () => {
+    fetch("http://localhost:8080/images")
+      .then((response) => response.json())
+      .then((data) => {
+        setImages(data);
+        console.log(data);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteImage = (id, image) => {
+    fetch(`http://localhost:8080/images/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setImages(images.filter((image) => image.id !== id));
+        if (image === selectedImage) {
+          setSelectedImage(null);
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  };
+
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+  };
+
   return (
     <div className="sampleTemplateContainer">
       <div className="sampleTemplateMainSection">
@@ -67,12 +115,43 @@ const SampleTemplate = () => {
           </Form>
           {fileList[0]?.name}
         </div>
-        <div>
-          <img src={fileList[0]?.name} alt="" />
+        <div className="fullSizeTemplateImageContainer">
+          {selectedImage && (
+            <div className="fullSizeTemplateImage">
+              <img
+                src={selectedImage}
+                alt={selectedImage}
+                width={"90%"}
+                onClick={() => setSelectedImage(null)}
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className="sampleTemplateRightSection">
-        <Button type="primary" icon={<RedoOutlined />}>Refresh</Button>
+        <div className="refreshButtonDiv">
+          <Button type="primary" icon={<RedoOutlined />} onClick={getImages}>
+            Refresh
+          </Button>
+        </div>
+        <div className="sampleTemplateImages">
+          {images.map((e, i) => (
+            <div key={e.id} className="templateImageContainer">
+              <img
+                src={e.image}
+                alt={e.image}
+                width={"100%"}
+                onClick={() => handleImageClick(e.image)}
+              />
+              <div
+                className="templateImageDeleteIcon"
+                onClick={() => handleDeleteImage(e.id, e.image)}
+              >
+                <DeleteOutlined />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
