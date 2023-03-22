@@ -12,19 +12,27 @@ const SampleTemplate = () => {
   const [fileList, setFileList] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [images, setImages] = useState([]);
+  const [refreshLoading, setRerfreshLoading] = useState(false);
 
   useEffect(() => {
     getImages();
   }, []);
 
   const getImages = () => {
-    fetch("http://localhost:8080/images")
-      .then((response) => response.json())
-      .then((data) => {
-        setImages(data);
-        console.log(data);
-      })
-      .catch((error) => console.error(error));
+    setRerfreshLoading(true);
+    setTimeout(() => {
+      fetch("http://localhost:8080/images")
+        .then((response) => response.json())
+        .then((data) => {
+          setImages(data);
+          console.log(data);
+          setRerfreshLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setRerfreshLoading(false);
+        });
+    },1000);
   };
 
   const handleDeleteImage = (id, image) => {
@@ -104,7 +112,7 @@ const SampleTemplate = () => {
                   setFileList([info.file]);
                 }}
                 showUploadList={false}
-                accept=".png,.jpeg,.jpg,.pdf"
+                accept=".png,.jpeg,.jpg"
               >
                 <Button icon={<UploadOutlined />}>Click to Upload</Button>
               </Upload>
@@ -122,15 +130,22 @@ const SampleTemplate = () => {
                 src={selectedImage}
                 alt={selectedImage}
                 width={"90%"}
-                onClick={() => setSelectedImage(null)}
+                // onClick={() => setSelectedImage(null)}
               />
             </div>
           )}
         </div>
       </div>
+
+      {/* Right Section */}
+
       <div className="sampleTemplateRightSection">
         <div className="refreshButtonDiv">
-          <Button type="primary" icon={<RedoOutlined />} onClick={getImages}>
+          <Button
+            type="primary"
+            icon={refreshLoading ? <LoadingOutlined /> : <RedoOutlined />}
+            onClick={getImages}
+          >
             Refresh
           </Button>
         </div>
