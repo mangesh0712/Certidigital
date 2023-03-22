@@ -20,6 +20,7 @@ const SampleTemplate = () => {
 
   const getImages = () => {
     setRerfreshLoading(true);
+    setImages([]);
     setTimeout(() => {
       fetch("http://localhost:8080/images")
         .then((response) => response.json())
@@ -32,7 +33,7 @@ const SampleTemplate = () => {
           console.error(error);
           setRerfreshLoading(false);
         });
-    },1000);
+    }, 1000);
   };
 
   const handleDeleteImage = (id, image) => {
@@ -126,12 +127,17 @@ const SampleTemplate = () => {
         <div className="fullSizeTemplateImageContainer">
           {selectedImage && (
             <div className="fullSizeTemplateImage">
-              <img
-                src={selectedImage}
-                alt={selectedImage}
-                width={"90%"}
-                // onClick={() => setSelectedImage(null)}
-              />
+              <div>
+                <img
+                  src={selectedImage}
+                  alt={selectedImage}
+                  width={"90%"}
+                  // onClick={() => setSelectedImage(null)}
+                />
+              </div>
+              <div className="nextButtonDiv">
+                <Button type="primary">Save & Next</Button>
+              </div>
             </div>
           )}
         </div>
