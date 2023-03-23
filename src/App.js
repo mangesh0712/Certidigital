@@ -10,6 +10,8 @@ import ResetPasswordSuccess from "./Pages/ResetPasswordSuccess/index";
 import ResetPassword from "./Pages/ResetPassword/index";
 import SampleTemplate from "./Pages/SampleTemplate";
 import Error404 from "./Pages/Error404";
+import Editor from "./Demo/Editor";
+import Rectangle from "./Demo/DraggableText ";
 
 
 function App() {
@@ -34,6 +36,7 @@ function App() {
         />
         <Route path="/sampleTemplate" element={<SampleTemplate />} />
         <Route path="*" element={<Error404 />} />
+        <Route path="/edit" element={<Rectangle />} />
       </Routes>
     </div>
   );
