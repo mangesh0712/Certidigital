@@ -1,6 +1,3 @@
-
-
-
 import React, { useRef, useEffect } from "react";
 
 function Rectangle() {
@@ -98,10 +95,126 @@ function Rectangle() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} style={{background:"teal", margin:"30px"}} width={800} height={500} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ background: "teal", margin: "30px" }}
+      width={800}
+      height={500}
+    />
+  );
 }
 
 export default Rectangle;
+
+// import React, { useRef, useEffect } from "react";
+
+// function Rectangle() {
+//   const canvasRef = useRef(null);
+//   let isDragging = false;
+//   let isResizing = false;
+//   let prevMousePosition = { x: 0, y: 0 };
+//   let rectanglePosition = { x: 50, y: 50 };
+//   let rectangleSize = { width: 300, height: 100 };
+//   const text = "Hello World!";
+
+//   useEffect(() => {
+//     const canvas = canvasRef.current;
+//     const context = canvas.getContext("2d");
+
+//     function drawRectangle() {
+//       context.clearRect(0, 0, canvas.width, canvas.height);
+//       context.fillStyle = "#FFFFFF";
+//       context.fillRect(
+//         rectanglePosition.x,
+//         rectanglePosition.y,
+//         rectangleSize.width,
+//         rectangleSize.height
+//       );
+//       const textWidth = context.measureText(text).width;
+//       const textHeight = 20; // Assuming font size is 20px
+//       context.fillStyle = "#000000";
+//       context.font = "20px Arial";
+//       context.fillText(
+//         text,
+//         rectanglePosition.x + rectangleSize.width / 2 - textWidth / 2,
+//         rectanglePosition.y + rectangleSize.height / 2 + textHeight / 2
+//       );
+//     }
+
+//     function handleMouseDown(event) {
+//       if (
+//         event.offsetX > rectanglePosition.x + rectangleSize.width - 10 &&
+//         event.offsetY > rectanglePosition.y + rectangleSize.height - 10
+//       ) {
+//         isResizing = true;
+//       } else {
+//         isDragging = true;
+//       }
+//       prevMousePosition = {
+//         x: event.clientX,
+//         y: event.clientY,
+//       };
+//     }
+
+//     function handleMouseMove(event) {
+//       if (isDragging) {
+//         const deltaX = event.clientX - prevMousePosition.x;
+//         const deltaY = event.clientY - prevMousePosition.y;
+
+//         rectanglePosition.x += deltaX;
+//         rectanglePosition.y += deltaY;
+
+//         prevMousePosition = {
+//           x: event.clientX,
+//           y: event.clientY,
+//         };
+
+//         drawRectangle();
+//       } else if (isResizing) {
+//         const deltaX = event.clientX - prevMousePosition.x;
+//         const deltaY = event.clientY - prevMousePosition.y;
+
+//         rectangleSize.width += deltaX;
+//         rectangleSize.height += deltaY;
+
+//         prevMousePosition = {
+//           x: event.clientX,
+//           y: event.clientY,
+//         };
+
+//         drawRectangle();
+//       }
+//     }
+
+//     function handleMouseUp() {
+//       isDragging = false;
+//       isResizing = false;
+//     }
+
+//     drawRectangle();
+//     canvas.addEventListener("mousedown", handleMouseDown);
+//     canvas.addEventListener("mousemove", handleMouseMove);
+//     canvas.addEventListener("mouseup", handleMouseUp);
+
+//     return () => {
+//       canvas.removeEventListener("mousedown", handleMouseDown);
+//       canvas.removeEventListener("mousemove", handleMouseMove);
+//       canvas.removeEventListener("mouseup", handleMouseUp);
+//     };
+//   }, []);
+
+//   return (
+//     <canvas
+//       ref={canvasRef}
+//       style={{ background: "teal", margin: "30px" }}
+//       width={800}
+//       height={500}
+//     />
+//   );
+// }
+
+// export default Rectangle;
 
 // import React, { useState } from "react";
 
@@ -204,7 +317,6 @@ export default Rectangle;
 // }
 
 // export default Rectangle;
-
 
 // import React, { useRef, useEffect } from "react";
 

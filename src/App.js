@@ -10,16 +10,13 @@ import ResetPasswordSuccess from "./Pages/ResetPasswordSuccess/index";
 import ResetPassword from "./Pages/ResetPassword/index";
 import SampleTemplate from "./Pages/SampleTemplate";
 import Error404 from "./Pages/Error404";
-import Editor from "./Demo/Editor";
-import Rectangle from "./Demo/DraggableText ";
-
+import SampleCertificate from "./Pages/SampleCertificate";
 
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<Signup />} />
-
         <Route path="/confirmAccount" element={<ConfirmAccount />} />
         <Route path="/confirmSuccess/:id" element={<ConfirmSuccess />} />
         <Route path="/login" element={<Login />} />
@@ -29,14 +26,13 @@ function App() {
           element={<ForgotPasswordMailSent />}
         />
         <Route path="/resetPassword/:id" element={<ResetPassword />} />
-
         <Route
           path="/resetPasswordSuccess"
           element={<ResetPasswordSuccess />}
         />
         <Route path="/sampleTemplate" element={<SampleTemplate />} />
         <Route path="*" element={<Error404 />} />
-        <Route path="/edit" element={<Rectangle />} />
+        <Route path="/edit" element={<SampleCertificate />} />
       </Routes>
     </div>
   );
