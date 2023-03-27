@@ -20,7 +20,7 @@ function App() {
 
         <Route path="/confirmAccount" element={<ConfirmAccount />} />
         <Route path="/confirmSuccess/:id" element={<ConfirmSuccess />} />
-        <Route path="/login" element={<Login />} 
+        <Route path="/login" element={<Login />}/> 
         <Route path="/csvTojson" element={<Csvtojson />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route
