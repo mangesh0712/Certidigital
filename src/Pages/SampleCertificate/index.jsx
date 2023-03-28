@@ -1,59 +1,103 @@
-import React, { useEffect, useRef } from "react";
+import { Button } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import "../../Styles/sampleCertificate.css"
 
 const SampleCertificate = () => {
   const canvasRef = useRef(null);
+  const [shapes, setShapes] = useState([
+    {
+      id: 1,
+      x: 100,
+      y: 100,
+      width: 200,
+      height: 50,
+      text: "Pankaj Kumar Ram",
+      fontSize: 20,
+      fontWeight: 600,
+      fontColor: "red",
+      fontFamily: "Arial",
+    },
+  ]);
+  const [shapeId, setShapeId] = useState(null);
   // let isDragging = false;
   // let isResizing = false;
   // let prevMousePosition = { x: 0, y: 0 };
   // let rectanglePosition = { x: 100, y: 100 };
   // let rectangleSize = { width: 200, height: 50 };
   // let text;
-  let shapes = [];
+  // let shapes = [];
   let current_shape_index = null;
   let is_dragging = false;
   let startX;
   let startY;
-  shapes.push({
-    x: 100,
-    y: 100,
-    width: 200,
-    height: 50,
-    text: "Pankaj Kumar Ram",
-    fontSize:20,
-    fontWeight:600,
-    fontColor:"red",
-    fontFamily:"Arial"
-  });
-  shapes.push({
-    x: 140,
-    y: 140,
-    width: 200,
-    height: 50,
-    text: "Masai School",
-    fontSize: 25,
-    fontWeight: 500,
-    fontColor: "blue",
-    fontFamily: "Mulish",
-  });
-    shapes.push({
-      x: 180,
-      y: 180,
-      width: 200,
-      height: 50,
-      text: "Masai Placement Portal",
-      fontSize: 30,
-      fontWeight: 400,
-      fontColor: "green",
-      fontFamily: "Roboto",
-    });
+  // let index = 0;
+  // shapes.push({
+  //   x: 100,
+  //   y: 100,
+  //   width: 200,
+  //   height: 50,
+  //   text: "Pankaj Kumar Ram",
+  //   fontSize:20,
+  //   fontWeight:600,
+  //   fontColor:"red",
+  //   fontFamily:"Arial"
+  // });
+  // shapes.push({
+  //   x: 140,
+  //   y: 140,
+  //   width: 200,
+  //   height: 50,
+  //   text: "Masai School",
+  //   fontSize: 25,
+  //   fontWeight: 500,
+  //   fontColor: "blue",
+  //   fontFamily: "Mulish",
+  // });
+  //   shapes.push({
+  //     x: 180,
+  //     y: 180,
+  //     width: 200,
+  //     height: 50,
+  //     text: "Masai Placement Portal",
+  //     fontSize: 30,
+  //     fontWeight: 400,
+  //     fontColor: "green",
+  //     fontFamily: "Roboto",
+  //   });
+
+  const addShape = () => {
+    const numShapes = shapes.length;
+    const newY = numShapes * 50 + 100;
+    setShapes([
+      ...shapes,
+      {
+        id: numShapes + 1,
+        x: newY,
+        y: newY,
+        width: 100,
+        height: 100,
+        text: `Text field ${numShapes + 1}...`,
+        fontSize: 20,
+        fontWeight: 400,
+        fontColor: "blue",
+        fontFamily: "Arial",
+      },
+    ]);
+  };
+
+  const deleteShape = (id) => {
+    setShapes(shapes.filter((shape, i) => shape.id !== id));
+    setShapeId(null);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
+    canvas.style.width = "100%"; // Set the width of the canvas to 50%
+    canvas.width = canvas.offsetWidth; // Set the width of the canvas to its offsetWidth
     const aspectRatio = 909 / 591;
-    canvas.width = 1000;
-    canvas.height = Math.floor(1000 / aspectRatio);
+    canvas.height = Math.ceil(canvas.width / aspectRatio);
     canvas.style.background =
       "url('https://previews.123rf.com/images/andipanggeleng/andipanggeleng1706/andipanggeleng170600013/80860152-blank-certificate-template.jpg')";
     canvas.style.backgroundSize = "cover";
@@ -89,7 +133,8 @@ const SampleCertificate = () => {
         y > shape_top &&
         y < shape_bottom
       ) {
-        console.log("Yes");
+        // console.log("Yes");
+        setShapeId(shape.id);
         return true;
       }
       return false;
@@ -100,12 +145,12 @@ const SampleCertificate = () => {
       startX = parseInt(event.clientX);
       startY = parseInt(event.clientY);
       let index = 0;
-
       for (let shape of shapes) {
-        console.log("before if",event, startX, startY);
+        // console.log("before if", event, startX, startY);
         if (is_mouse_in_shape(startX, startY, shape)) {
-          console.log("after if")
+          // console.log("after if");
           current_shape_index = index;
+          // setShapeId(shape.id);
           is_dragging = true;
           return;
         }
@@ -155,18 +200,9 @@ const SampleCertificate = () => {
       for (let shape of shapes) {
         context.fillStyle = shape.fontColor;
         context.font = `${shape.fontWeight} ${shape.fontSize}px ${shape.fontFamily}`;
-        context.fillText(
-          shape.text,
-          shape.x,
-          shape.y + 22
-        );
+        context.fillText(shape.text, shape.x, shape.y + 22);
         context.fillStyle = "transparent";
-        context.fillRect(
-          shape.x,
-          shape.y,
-          shape.width,
-          shape.height
-        );
+        context.fillRect(shape.x, shape.y, shape.width, shape.height);
       }
     };
 
@@ -177,8 +213,25 @@ const SampleCertificate = () => {
       canvas.onmouseout = mouse_out;
       canvas.onmousemove = mouse_move;
     };
-  }, []);
-  return <canvas ref={canvasRef} />;
+  }, [shapes, shapeId]);
+
+  return (
+    <>
+      <div className="sampleCertificateContainer">
+        <div className="canvasContainer">
+          <canvas ref={canvasRef} />
+        </div>
+        <div className="sampleCertificateRightBox">
+          <Button type="primary" onClick={addShape}>
+            Add Shape
+          </Button>
+          {shapeId ? (
+            <Button onClick={() => deleteShape(shapeId)}>Delete</Button>
+          ) : null}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default SampleCertificate;
