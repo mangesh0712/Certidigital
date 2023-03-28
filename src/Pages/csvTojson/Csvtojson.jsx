@@ -58,15 +58,15 @@ const Csvtojson = () => {
       with:100
     },
     {
-      title: 'EMAIL-BODY',
-      dataIndex: 'Email_body',
+      title: 'START-DATE',
+      dataIndex: 'Start-date',
       key: 'Body',
       align	:'center',
       with:100
     },
     {
-      title: 'EMAIL-SUBJECT',
-      dataIndex: 'Email_subject',
+      title: 'END-DATE',
+      dataIndex: 'End-date',
       key: 'Subject',
       align	:'center',
       with:100
