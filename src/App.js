@@ -12,6 +12,7 @@ import ResetPassword from "./Pages/ResetPassword/index";
 import SampleTemplate from "./Pages/SampleTemplate";
 import SampleCertificate from "./Pages/SampleCertificate";
 import Error404 from "./Pages/Error404";
+import Alltemplate from './Pages/Alltemplate';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           element={<ResetPasswordSuccess />}
         />
         <Route path="/sampleTemplate" element={<SampleTemplate />} />
+        <Route path="/alltemplate" element={<Alltemplate />} />
         <Route path="/edit" element={<SampleCertificate />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
