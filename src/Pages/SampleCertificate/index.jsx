@@ -1,6 +1,6 @@
-import { Button } from "antd";
+import { Button, Form, Input, Select, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import "../../Styles/sampleCertificate.css"
+import "../../Styles/sampleCertificate.css";
 
 const SampleCertificate = () => {
   const canvasRef = useRef(null);
@@ -11,59 +11,20 @@ const SampleCertificate = () => {
       y: 100,
       width: 200,
       height: 50,
-      text: "Pankaj Kumar Ram",
+      text: "Text Field 1",
       fontSize: 20,
       fontWeight: 600,
-      fontColor: "red",
+      fontColor: "blue",
       fontFamily: "Arial",
     },
   ]);
   const [shapeId, setShapeId] = useState(null);
-  // let isDragging = false;
-  // let isResizing = false;
-  // let prevMousePosition = { x: 0, y: 0 };
-  // let rectanglePosition = { x: 100, y: 100 };
-  // let rectangleSize = { width: 200, height: 50 };
-  // let text;
-  // let shapes = [];
+  const [form] = Form.useForm();
+  const [currentShape, setCurrentShape] = useState(null);
   let current_shape_index = null;
   let is_dragging = false;
   let startX;
   let startY;
-  // let index = 0;
-  // shapes.push({
-  //   x: 100,
-  //   y: 100,
-  //   width: 200,
-  //   height: 50,
-  //   text: "Pankaj Kumar Ram",
-  //   fontSize:20,
-  //   fontWeight:600,
-  //   fontColor:"red",
-  //   fontFamily:"Arial"
-  // });
-  // shapes.push({
-  //   x: 140,
-  //   y: 140,
-  //   width: 200,
-  //   height: 50,
-  //   text: "Masai School",
-  //   fontSize: 25,
-  //   fontWeight: 500,
-  //   fontColor: "blue",
-  //   fontFamily: "Mulish",
-  // });
-  //   shapes.push({
-  //     x: 180,
-  //     y: 180,
-  //     width: 200,
-  //     height: 50,
-  //     text: "Masai Placement Portal",
-  //     fontSize: 30,
-  //     fontWeight: 400,
-  //     fontColor: "green",
-  //     fontFamily: "Roboto",
-  //   });
 
   const addShape = () => {
     const numShapes = shapes.length;
@@ -74,11 +35,11 @@ const SampleCertificate = () => {
         id: numShapes + 1,
         x: newY,
         y: newY,
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 50,
         text: `Text field ${numShapes + 1}...`,
         fontSize: 20,
-        fontWeight: 400,
+        fontWeight: 600,
         fontColor: "blue",
         fontFamily: "Arial",
       },
@@ -89,6 +50,46 @@ const SampleCertificate = () => {
     setShapes(shapes.filter((shape, i) => shape.id !== id));
     setShapeId(null);
   };
+  const editShape = (id) => {
+    setCurrentShape(null);
+    let selectedShape = shapes.filter((shape, i) => shape.id == id);
+    setCurrentShape(selectedShape[0]);
+    form.setFieldsValue(selectedShape[0]);
+    // setShapeId(null);
+  };
+
+  const handleCertificateUpdate = (values) => {
+    console.log("values", values);
+    const newValues = {
+      ...values,
+      width: Number(values.width),
+      height: Number(values.height),
+      x: Number(values.x),
+      y: Number(values.y),
+    };
+    // const newShapes = shapes.map((item) =>
+    //   item.id === newValues.id ? { ...item, ...newValues } : item
+    // );
+    const newShapes = shapes.map((item) => {
+      if (item.id === newValues.id) {
+        const updatedItem = { ...item, ...newValues };
+        for (let key in updatedItem) {
+          if (
+            typeof updatedItem[key] === "string" &&
+            !isNaN(updatedItem[key])
+          ) {
+            updatedItem[key] = Number(updatedItem[key]);
+          }
+        }
+        return updatedItem;
+      }
+      return item;
+    });
+    setShapes(newShapes);
+    form.resetFields();
+    message.success("Field updated successfully");
+    setCurrentShape(null);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -97,7 +98,7 @@ const SampleCertificate = () => {
     canvas.style.width = "100%"; // Set the width of the canvas to 50%
     canvas.width = canvas.offsetWidth; // Set the width of the canvas to its offsetWidth
     const aspectRatio = 909 / 591;
-    canvas.height = Math.ceil(canvas.width / aspectRatio);
+    canvas.height = Math.floor(canvas.width / aspectRatio);
     canvas.style.background =
       "url('https://previews.123rf.com/images/andipanggeleng/andipanggeleng1706/andipanggeleng170600013/80860152-blank-certificate-template.jpg')";
     canvas.style.backgroundSize = "cover";
@@ -126,7 +127,7 @@ const SampleCertificate = () => {
       let shape_left = shape.x;
       let shape_right = shape.x + shape.width;
       let shape_top = shape.y;
-      let shape_bottom = shape.x + shape.height;
+      let shape_bottom = shape.y + shape.height;
       if (
         x > shape_left &&
         x < shape_right &&
@@ -150,8 +151,9 @@ const SampleCertificate = () => {
         if (is_mouse_in_shape(startX, startY, shape)) {
           // console.log("after if");
           current_shape_index = index;
-          // setShapeId(shape.id);
+          setShapeId(shape.id);
           is_dragging = true;
+          setCurrentShape(null);
           return;
         }
         index++;
@@ -200,7 +202,10 @@ const SampleCertificate = () => {
       for (let shape of shapes) {
         context.fillStyle = shape.fontColor;
         context.font = `${shape.fontWeight} ${shape.fontSize}px ${shape.fontFamily}`;
-        context.fillText(shape.text, shape.x, shape.y + 22);
+        context.fillText(shape.text, shape.x, shape.y + 15);
+        context.strokeStyle = "grey";
+        context.lineWidth = 1;
+        context.strokeRect(shape.x, shape.y, shape.width, shape.height);
         context.fillStyle = "transparent";
         context.fillRect(shape.x, shape.y, shape.width, shape.height);
       }
@@ -222,11 +227,200 @@ const SampleCertificate = () => {
           <canvas ref={canvasRef} />
         </div>
         <div className="sampleCertificateRightBox">
-          <Button type="primary" onClick={addShape}>
-            Add Shape
-          </Button>
+          <div className="sampleCertificateAddButton">
+            <Button type="primary" block onClick={addShape}>
+              Add New Field
+            </Button>
+          </div>
           {shapeId ? (
-            <Button onClick={() => deleteShape(shapeId)}>Delete</Button>
+            <div>
+              <div className="selectedShapeDiv">
+                <Button
+                  style={{
+                    background: "#1F2937",
+                    color: "White",
+                    fontWeight: 600,
+                  }}
+                  type="primary"
+                  block
+                  onClick={() => editShape(shapeId)}
+                >
+                  Edit Seleted Field
+                </Button>
+                <Button
+                  style={{
+                    background: "#F94A29",
+                    color: "White",
+                    fontWeight: 600,
+                  }}
+                  type="primary"
+                  block
+                  onClick={() => deleteShape(shapeId)}
+                >
+                  Delete Seleted Field
+                </Button>
+              </div>
+              <div>
+                {currentShape ? (
+                  <Form
+                    form={form}
+                    labelAlign=""
+                    layout="vertical"
+                    autoComplete="off"
+                    onFinish={handleCertificateUpdate}
+                    onFinishFailed={(error) => {
+                      console.log({ error });
+                    }}
+                    initialValues={currentShape}
+                  >
+                    <h3>Edit the Selected Field</h3>
+                    <Form.Item name="id" style={{ display: "none" }}>
+                      <Input type="hidden" />
+                    </Form.Item>
+                    <div className="TwoFormItemsDiv">
+                      <Form.Item
+                        label="X Position"
+                        name="x"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter X Position",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label="Y Position"
+                        name="y"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter Y Position",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
+                    <div className="TwoFormItemsDiv">
+                      <Form.Item
+                        label="Width"
+                        name="width"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter width",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label="Height"
+                        name="height"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter height",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
+                    <Form.Item
+                      label="Demo Text"
+                      name="text"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter the demo text",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <div className="TwoFormItemsDiv">
+                      <Form.Item
+                        label="Font Size"
+                        name="fontSize"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter Font Size",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label="Font Color"
+                        name="fontColor"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please select Font Color",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
+                    <div className="TwoFormItemsDiv">
+                      <Form.Item
+                        style={{ width: "50%" }}
+                        label="Font Weight"
+                        name="fontWeight"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please select Font Weight",
+                          },
+                        ]}
+                      >
+                        <Select allowClear placeholder="Select Font Weight">
+                          <Select.Option value="300">300</Select.Option>
+                          <Select.Option value="400">400</Select.Option>
+                          <Select.Option value="500">500</Select.Option>
+                          <Select.Option value="600">600</Select.Option>
+                          <Select.Option value="700">700</Select.Option>
+                          <Select.Option value="800">800</Select.Option>
+                          <Select.Option value="900">900</Select.Option>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item
+                        label="Font Family"
+                        name="fontFamily"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please select Font Family",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
+                    <Form.Item>
+                      <Button
+                        style={{
+                          background: "#1F2937",
+                          color: "White",
+                          fontWeight: 600,
+                        }}
+                        // loading={signupFormLoading}
+                        block
+                        type="primary"
+                        htmlType="submit"
+                      >
+                        Submit
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                ) : null}
+              </div>
+            </div>
           ) : null}
         </div>
       </div>
@@ -235,3 +429,9 @@ const SampleCertificate = () => {
 };
 
 export default SampleCertificate;
+
+// text: `Text field ${numShapes + 1}...`,
+//         fontSize: 20,
+//         fontWeight: "100",
+//         fontColor: "blue",
+//         fontFamily: "Arial",
