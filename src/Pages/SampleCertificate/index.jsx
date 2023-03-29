@@ -1,6 +1,5 @@
 import { Button } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import Sidebar from "./sidebar";
 import "../../Styles/sampleCertificate.css"
 
 const SampleCertificate = () => {
@@ -229,7 +228,7 @@ const SampleCertificate = () => {
           {shapeId ? (
             <Button onClick={() => deleteShape(shapeId)}>Delete</Button>
           ) : null}
-           <Sidebar />
+          
         </div>
        
       </div>
