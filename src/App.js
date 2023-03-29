@@ -10,6 +10,7 @@ import ForgotPasswordMailSent from "./Pages/ForgotPasswordMailSent/index";
 import ResetPasswordSuccess from "./Pages/ResetPasswordSuccess/index";
 import ResetPassword from "./Pages/ResetPassword/index";
 import SampleTemplate from "./Pages/SampleTemplate";
+import SampleCertificate from "./Pages/SampleCertificate";
 import Error404 from "./Pages/Error404";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           element={<ResetPasswordSuccess />}
         />
         <Route path="/sampleTemplate" element={<SampleTemplate />} />
+        <Route path="/edit" element={<SampleCertificate />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
     </div>

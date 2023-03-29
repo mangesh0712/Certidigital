@@ -1,0 +1,10 @@
+.sampleCertificateContainer{
+    display: flex;
+    gap:5%
+}
+.canvasContainer{
+    width: 70%;
+}
+.sampleCertificateRightBox{
+ width: 25%;
+}
