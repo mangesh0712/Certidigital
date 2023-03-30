@@ -36,7 +36,7 @@ function App() {
           element={<ResetPasswordSuccess />}
         />
         <Route path="/sampleTemplate" element={<SampleTemplate />} />
-        <Route path="/alltemplate" element={<Alltemplate />} />
+        <Route path="/template" element={<Alltemplate />} />
         <Route path="/edit" element={<SampleCertificate />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
