@@ -273,11 +273,11 @@ const SampleCertificate = () => {
               marginBottom: "15px",
             }}
           >
-            {shapes.length>0 ? (
+            {shapes.length > 0 ? (
               <>
                 {shapes.map((shape) => (
                   <div key={shape.id}>
-                    <h3>
+                    <h3 style={{ color: "#F94A29" }}>
                       Field {shape.id}:{" "}
                       <span
                         style={{
@@ -292,7 +292,7 @@ const SampleCertificate = () => {
                 ))}
               </>
             ) : (
-              <div>
+              <div style={{ textAlign: "center" }}>
                 <h3>No field added, Please add fields</h3>
               </div>
             )}
