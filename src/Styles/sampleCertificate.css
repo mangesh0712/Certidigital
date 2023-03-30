@@ -2,6 +2,7 @@
     display: flex;
     gap:4%;
     padding:1%;
+    color: "#1F2937";
 }
 .canvasContainer{
     width: 65%;
@@ -21,5 +22,5 @@
 .TwoFormItemsDiv{
     display: flex;
     justify-content: space-between;
-    gap:10%
+    gap:2%
 }

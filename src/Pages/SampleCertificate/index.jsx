@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, message } from "antd";
+import { Button, Form, Input, InputNumber, Select, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import "../../Styles/sampleCertificate.css";
 
@@ -14,7 +14,7 @@ const SampleCertificate = () => {
       text: "Text Field 1",
       fontSize: 20,
       fontWeight: 600,
-      fontColor: "blue",
+      fontColor: "#1F2937",
       fontFamily: "Arial",
     },
   ]);
@@ -37,10 +37,10 @@ const SampleCertificate = () => {
         y: newY,
         width: 200,
         height: 50,
-        text: `Text field ${numShapes + 1}...`,
+        text: `Text Field ${numShapes + 1}`,
         fontSize: 20,
         fontWeight: 600,
-        fontColor: "blue",
+        fontColor: "#1F2937",
         fontFamily: "Arial",
       },
     ]);
@@ -97,10 +97,9 @@ const SampleCertificate = () => {
 
     canvas.style.width = "100%"; // Set the width of the canvas to 50%
     canvas.width = canvas.offsetWidth; // Set the width of the canvas to its offsetWidth
-    const aspectRatio = 909 / 591;
+    const aspectRatio = 1008 / 612;
     canvas.height = Math.floor(canvas.width / aspectRatio);
-    canvas.style.background =
-      "url('https://previews.123rf.com/images/andipanggeleng/andipanggeleng1706/andipanggeleng170600013/80860152-blank-certificate-template.jpg')";
+    canvas.style.background = "url('./CourseComplitionBlankTemplate.jpg')";
     canvas.style.backgroundSize = "cover";
     let canvas_width = canvas.width;
     let canvas_height = canvas.height;
@@ -127,7 +126,7 @@ const SampleCertificate = () => {
       let shape_left = shape.x;
       let shape_right = shape.x + shape.width;
       let shape_top = shape.y;
-      let shape_bottom = shape.y + shape.height;
+      let shape_bottom = shape.y + shape.height + 10;
       if (
         x > shape_left &&
         x < shape_right &&
@@ -154,6 +153,7 @@ const SampleCertificate = () => {
           setShapeId(shape.id);
           is_dragging = true;
           setCurrentShape(null);
+          draw_shapes();
           return;
         }
         index++;
@@ -166,6 +166,7 @@ const SampleCertificate = () => {
       }
       event.preventDefault();
       is_dragging = false;
+      draw_shapes();
     };
     let mouse_out = function (event) {
       if (!is_dragging) {
@@ -173,6 +174,7 @@ const SampleCertificate = () => {
       }
       event.preventDefault();
       is_dragging = false;
+      draw_shapes();
     };
 
     let mouse_move = function (event) {
@@ -202,16 +204,47 @@ const SampleCertificate = () => {
       for (let shape of shapes) {
         context.fillStyle = shape.fontColor;
         context.font = `${shape.fontWeight} ${shape.fontSize}px ${shape.fontFamily}`;
-        context.fillText(shape.text, shape.x, shape.y + 15);
-        context.strokeStyle = "grey";
-        context.lineWidth = 1;
-        context.strokeRect(shape.x, shape.y, shape.width, shape.height);
-        context.fillStyle = "transparent";
-        context.fillRect(shape.x, shape.y, shape.width, shape.height);
+        let textWidth = context.measureText(shape.text).width;
+        let textHeight = shape.fontSize;
+        shape.width = textWidth;
+        shape.height = textHeight;
+        let centerX = shape.x + shape.width / 2;
+        let centerY = shape.y + shape.height / 2;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillText(shape.text, centerX, centerY);
+        // context.strokeStyle = "grey";
+        // context.lineWidth = 1;
+        // context.strokeRect(shape.x, shape.y, shape.width, shape.height);
+        // context.fillStyle = "transparent";
+        // context.fillRect(shape.x, shape.y, shape.width, shape.height);
+        if (shape.id == shapeId) {
+          context.strokeStyle = "grey";
+          context.lineWidth = 1;
+          context.strokeRect(shape.x, shape.y, shape.width, shape.height);
+          context.fillStyle = "transparent";
+          context.fillRect(shape.x, shape.y, shape.width, shape.height);
+        }
       }
     };
 
     draw_shapes();
+
+    canvas.addEventListener("click", function (event) {
+      let mouseX = parseInt(event.clientX);
+      let mouseY = parseInt(event.clientY);
+      let isInsideShape = false;
+      for (let shape of shapes) {
+        if (is_mouse_in_shape(mouseX, mouseY, shape)) {
+          isInsideShape = true;
+          break;
+        }
+      }
+      if (!isInsideShape) {
+        setShapeId(null);
+        draw_shapes();
+      }
+    });
     return () => {
       canvas.onmousedown = mouse_down;
       canvas.onmouseup = mouse_up;
@@ -231,6 +264,38 @@ const SampleCertificate = () => {
             <Button type="primary" block onClick={addShape}>
               Add New Field
             </Button>
+          </div>
+          <div
+            style={{
+              background: "white",
+              padding: "1px 20px",
+              borderRadius: "10px",
+              marginBottom: "15px",
+            }}
+          >
+            {shapes.length>0 ? (
+              <>
+                {shapes.map((shape) => (
+                  <div key={shape.id}>
+                    <h3>
+                      Field {shape.id}:{" "}
+                      <span
+                        style={{
+                          color: `${shape.fontColor}`,
+                          fontWeight: `${shape.fontWeight}`,
+                        }}
+                      >
+                        {shape.text}
+                      </span>
+                    </h3>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <div>
+                <h3>No field added, Please add fields</h3>
+              </div>
+            )}
           </div>
           {shapeId ? (
             <div>
@@ -288,7 +353,7 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Input />
+                        <InputNumber />
                       </Form.Item>
                       <Form.Item
                         label="Y Position"
@@ -300,10 +365,9 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Input />
+                        <InputNumber />
                       </Form.Item>
-                    </div>
-                    <div className="TwoFormItemsDiv">
+
                       <Form.Item
                         label="Width"
                         name="width"
@@ -314,7 +378,7 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Input />
+                        <InputNumber />
                       </Form.Item>
                       <Form.Item
                         label="Height"
@@ -326,7 +390,7 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Input />
+                        <InputNumber />
                       </Form.Item>
                     </div>
                     <Form.Item
@@ -352,7 +416,7 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Input />
+                        <InputNumber />
                       </Form.Item>
                       <Form.Item
                         label="Font Color"
@@ -364,12 +428,9 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Input />
+                        <Input style={{ width: 100 }} />
                       </Form.Item>
-                    </div>
-                    <div className="TwoFormItemsDiv">
                       <Form.Item
-                        style={{ width: "50%" }}
                         label="Font Weight"
                         name="fontWeight"
                         rules={[
@@ -399,7 +460,7 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Input />
+                        <Input style={{ width: 100 }} />
                       </Form.Item>
                     </div>
                     <Form.Item>
@@ -421,7 +482,12 @@ const SampleCertificate = () => {
                 ) : null}
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div style={{ textAlign: "center", lineHeight: 0 }}>
+              <h3>Please Select to drag or edit any field</h3>
+              <h3>( To select , click on the field )</h3>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -429,9 +495,3 @@ const SampleCertificate = () => {
 };
 
 export default SampleCertificate;
-
-// text: `Text field ${numShapes + 1}...`,
-//         fontSize: 20,
-//         fontWeight: "100",
-//         fontColor: "blue",
-//         fontFamily: "Arial",
