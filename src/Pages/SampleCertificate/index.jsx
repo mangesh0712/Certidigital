@@ -7,13 +7,15 @@ const SampleCertificate = () => {
   const [shapes, setShapes] = useState([
     {
       id: 1,
+      name: "Name",
+      alignment: "center",
       x: 100,
       y: 100,
-      width: 200,
+      width: 300,
       height: 50,
-      text: "Text Field 1",
-      fontSize: 20,
-      fontWeight: 600,
+      text: "Pankaj Kumar Ram",
+      fontSize: 25,
+      fontWeight: 800,
       fontColor: "#1F2937",
       fontFamily: "Arial",
     },
@@ -33,6 +35,8 @@ const SampleCertificate = () => {
       ...shapes,
       {
         id: numShapes + 1,
+        name: "Blank Field",
+        alignment: "center",
         x: newY,
         y: newY,
         width: 200,
@@ -206,13 +210,30 @@ const SampleCertificate = () => {
         context.font = `${shape.fontWeight} ${shape.fontSize}px ${shape.fontFamily}`;
         let textWidth = context.measureText(shape.text).width;
         let textHeight = shape.fontSize;
-        shape.width = textWidth;
+        // shape.width = textWidth+60;
         shape.height = textHeight;
+        if (textWidth > shape.width) {
+          shape.width = textWidth + 60;
+        }
         let centerX = shape.x + shape.width / 2;
         let centerY = shape.y + shape.height / 2;
-        context.textAlign = "center";
+        let textX = context.canvas.width - shape.width / 2;
         context.textBaseline = "middle";
-        context.fillText(shape.text, centerX, centerY);
+        if (shape.alignment == "center") {
+          context.textAlign = "center";
+          context.fillText(shape.text, centerX, centerY);
+        } else if (shape.alignment == "left") {
+          context.textAlign = "left";
+          context.fillText(shape.text, shape.x, centerY);
+        } else if (shape.alignment == "right") {
+          context.textAlign = "right";;
+          let textX = shape.x + shape.width; // Adjust the x-coordinate to align the text to the right
+          let textY = shape.y + shape.height / 2;
+          context.fillText(shape.text, textX, textY);
+        }
+        // context.textAlign = "left";
+        // context.fillText(shape.text, shape.x, centerY);
+        
         // context.strokeStyle = "grey";
         // context.lineWidth = 1;
         // context.strokeRect(shape.x, shape.y, shape.width, shape.height);
@@ -278,7 +299,7 @@ const SampleCertificate = () => {
                 {shapes.map((shape) => (
                   <div key={shape.id}>
                     <h3 style={{ color: "#F94A29" }}>
-                      Field {shape.id}:{" "}
+                      {shape.name}:{" "}
                       <span
                         style={{
                           color: `${shape.fontColor}`,
@@ -393,8 +414,50 @@ const SampleCertificate = () => {
                         <InputNumber />
                       </Form.Item>
                     </div>
+                    <Form.Item extra="Please give the 'Field Name' same as the csv file field names.">
+                      <div
+                        className="FieldTextMainDiv"
+                        style={{ marginBottom: -20 }}
+                      >
+                        <div className="FieldNameDiv">
+                          <Form.Item
+                            label="Field Name"
+                            name="name"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please enter the Field Name",
+                              },
+                            ]}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </div>
+                        <div className="FieldTextDiv">
+                          <Form.Item
+                            label="Text Alignment"
+                            name="alignment"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please select the Text Alignment",
+                              },
+                            ]}
+                          >
+                            <Select placeholder="Select Text Algnment">
+                              <Select.Option value="center">
+                                Center
+                              </Select.Option>
+                              <Select.Option value="left">Left</Select.Option>
+                              <Select.Option value="right">Right</Select.Option>
+                            </Select>
+                          </Form.Item>
+                        </div>
+                      </div>
+                    </Form.Item>
                     <Form.Item
-                      label="Demo Text"
+                      style={{ marginTop: -10 }}
+                      label="Field Text"
                       name="text"
                       rules={[
                         {
@@ -440,7 +503,7 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Select allowClear placeholder="Select Font Weight">
+                        <Select placeholder="Select Font Weight">
                           <Select.Option value="300">300</Select.Option>
                           <Select.Option value="400">400</Select.Option>
                           <Select.Option value="500">500</Select.Option>
@@ -460,7 +523,25 @@ const SampleCertificate = () => {
                           },
                         ]}
                       >
-                        <Input style={{ width: 100 }} />
+                        <Select placeholder="Select Font Family">
+                          <Select.Option value="Arial">Arial</Select.Option>
+                          <Select.Option value="Verdana">Verdana</Select.Option>
+                          <Select.Option value="Times New Roman">
+                            Times New Roman
+                          </Select.Option>
+                          <Select.Option value="Courier New">
+                            Courier New
+                          </Select.Option>
+                          <Select.Option value="Georgia">Georgia</Select.Option>
+                          <Select.Option value="Tahoma">Tahoma</Select.Option>
+                          <Select.Option value="Trebuchet MS">
+                            Trebuchet MS
+                          </Select.Option>
+                          <Select.Option value="Comic Sans MS">
+                            Comic Sans MS
+                          </Select.Option>
+                          <Select.Option value="Impact">Impact</Select.Option>
+                        </Select>
                       </Form.Item>
                     </div>
                     <Form.Item>
