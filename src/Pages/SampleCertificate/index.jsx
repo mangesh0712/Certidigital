@@ -217,15 +217,14 @@ const SampleCertificate = () => {
         }
         let centerX = shape.x + shape.width / 2;
         let centerY = shape.y + shape.height / 2;
-        let textX = context.canvas.width - shape.width / 2;
         context.textBaseline = "middle";
-        if (shape.alignment == "center") {
+        if (shape.alignment === "center") {
           context.textAlign = "center";
           context.fillText(shape.text, centerX, centerY);
-        } else if (shape.alignment == "left") {
+        } else if (shape.alignment === "left") {
           context.textAlign = "left";
           context.fillText(shape.text, shape.x, centerY);
-        } else if (shape.alignment == "right") {
+        } else if (shape.alignment === "right") {
           context.textAlign = "right";;
           let textX = shape.x + shape.width; // Adjust the x-coordinate to align the text to the right
           let textY = shape.y + shape.height / 2;
@@ -239,7 +238,7 @@ const SampleCertificate = () => {
         // context.strokeRect(shape.x, shape.y, shape.width, shape.height);
         // context.fillStyle = "transparent";
         // context.fillRect(shape.x, shape.y, shape.width, shape.height);
-        if (shape.id == shapeId) {
+        if (shape.id === shapeId) {
           context.strokeStyle = "grey";
           context.lineWidth = 1;
           context.strokeRect(shape.x, shape.y, shape.width, shape.height);
@@ -266,6 +265,7 @@ const SampleCertificate = () => {
         draw_shapes();
       }
     });
+    console.log("shapes", shapes);
     return () => {
       canvas.onmousedown = mouse_down;
       canvas.onmouseup = mouse_up;
