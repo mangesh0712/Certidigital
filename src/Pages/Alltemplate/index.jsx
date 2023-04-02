@@ -1,38 +1,20 @@
 import { useState,useEffect } from 'react';
-import { Table, Button, Space } from 'antd';
+import { Table, Button, Space,Modal,Input, Form,Image} from 'antd';
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
+import {Link} from "react-router-dom"
 
 const Alltemplate = () => {
 
-  // const data = [
-  //   {
-  //     key: '1',
-  //     image: 'https://th.bing.com/th/id/OIP.x-jsFaVzCeRA4ZUuT7WrIQHaFu?w=249&h=192&c=7&r=0&o=5&pid=1.7',
-  //     name: 'Template 1',
-  //   },
-  //   {
-  //     key: '2',
-  //     image: 'https://i.pinimg.com/736x/74/80/22/748022a9a37f3cbc181200ff48b97972.jpg',
-  //     name: 'Template 2',
-  //   },
-  //   {
-  //     key: '3',
-  //     image: 'https://i.pinimg.com/originals/6e/f2/75/6ef275185644ab0b53b74fb764686367.jpg',
-  //     name: 'Template 3',
-  //   },
-  //   {
-  //     key: '4',
-  //     image: 'https://i.pinimg.com/736x/74/80/22/748022a9a37f3cbc181200ff48b97972.jpg',
-  //     name: 'Template 4',
-  //   },
-  // ];
   const [products, setProducts] = useState([]);
+  const [form] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   useEffect(() => {
     fetchProducts();
   }, []);
   const fetchProducts = async () => {
-    const response = await axios.get('http://localhost:8080/templates');
+    const response = await axios.get('http://localhost:8080/images');
     setProducts(response.data);
     console.log(products)
   };
@@ -44,7 +26,13 @@ const Alltemplate = () => {
       key: 'image',
       align:'center',
       render: (text, record) => (
-        <img src={record.image} alt="product image" style={{ width: '100px' }} />
+        <Image src={record.image} 
+        width={80}
+        height={50}
+        preview={{
+          mask: <div style={{ background: 'rgba(0, 0, 0, 0.5)' }} />,
+        }} 
+         />
       ),
     },
     {
@@ -66,15 +54,49 @@ const Alltemplate = () => {
     },
   ];
   const handleDelete = async (record) => {
-    await axios.delete(`http://localhost:8080/templates/${record.id}`);
+    await axios.delete(`http://localhost:8080/images/${record.id}`);
     fetchProducts();
   };
+
+  const handleEdit = (record) => {
+    setSelectedProduct(record);
+    setIsModalVisible(true);
+    form.setFieldsValue(record);
+  };
+
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+      await axios.put(`http://localhost:8080/images/${selectedProduct.id}`, values);
+      setIsModalVisible(false);
+      fetchProducts();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <div>
-      
-      <div style={{float:"right"}}><Button align="right">Upload Template</Button></div>
+
+      <div style={{float:"right"}}> <Link to={'/uploadtemplate'}><Button align="right">Upload Template</Button></Link></div>
         
-       <Table columns={columns} dataSource={products} size='middle'/>
+       <Table columns={columns} dataSource={products} size='small'/>
+       <Modal
+        title="Edit Product"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
    
   )

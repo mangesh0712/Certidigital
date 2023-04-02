@@ -1,28 +1,23 @@
 {
-  "templates": [
+  "images": [
     {
-      "id": 1,
-      "name": "Template 1",
-      "image": "https://i.pinimg.com/736x/74/80/22/748022a9a37f3cbc181200ff48b97972.jpg"
-    },
-    {
+      "name": "ft-web_16",
       "id": 2,
-      "name": "Template 2",
-      "image": "https://i.pinimg.com/736x/74/80/22/748022a9a37f3cbc181200ff48b97972.jpg"
-    },
-    {
-      "id": 3,
-      "name": "Template 3",
-      "image": "https://i.pinimg.com/736x/74/80/22/748022a9a37f3cbc181200ff48b97972.jpg"
+      "image": "https://i.pinimg.com/originals/6e/f2/75/6ef275185644ab0b53b74fb764686367.jpg"
     },
     {
       "id": 4,
-      "name": "Template 4",
+      "name": "ft-web_13",
       "image": "https://i.pinimg.com/736x/74/80/22/748022a9a37f3cbc181200ff48b97972.jpg"
     },
     {
       "id": 5,
-      "name": "Template 4",
+      "name": "ft-web_13",
+      "image": "https://i.pinimg.com/736x/74/80/22/748022a9a37f3cbc181200ff48b97972.jpg"
+    },
+    {
+      "id": 6,
+      "name": "ft-web_15",
       "image": "https://i.pinimg.com/736x/74/80/22/748022a9a37f3cbc181200ff48b97972.jpg"
     }
   ]
