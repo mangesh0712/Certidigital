@@ -67,21 +67,25 @@ const SampleTemplate = () => {
   // 'http://localhost:8080/template/uploadtemplate'
 
   const handleSubmitForm = (values) => {
-    console.log("values: ", values);
+    console.log("fileList", fileList);
+    console.log("values: ", values.sampleTemplate[0]);
     const formData = new FormData();
     // formData.append("image", values.sampleTemplate[0].originFileObj);
     formData.append("image", values.sampleTemplate[0]);
 
     fetch("http://localhost:8080/template/uploadtemplate", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: formData,
     })
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log("data",data);
       })
       .catch((error) => {
-        console.error("error",error);
+        console.error("error", error);
       });
   };
 
