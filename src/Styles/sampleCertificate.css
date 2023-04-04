@@ -1,3 +1,15 @@
+
+.sampleCertificateContainer{
+    display: flex;
+    gap:5%
+}
+.canvasContainer{
+    width: 70%;
+}
+.sampleCertificateRightBox{
+ width: 25%;
+}
+
 * {
   font-family: "Mulish", sans-serif;
   box-sizing: border-box;
@@ -54,3 +66,4 @@
 .FieldTextDiv {
   width: 48%;
 }
+

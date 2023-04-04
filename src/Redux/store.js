@@ -5,9 +5,12 @@ import {
   legacy_createStore as createStore,
 } from "redux";
 import thunk from "redux-thunk";
+import {postDatareducer} from './AllTemplate/Post/reducer'
 
 //combine reducers
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  postImage: postDatareducer,
+});
 
 //reduxtool
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
