@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { ArrowRightOutlined } from "@ant-design/icons";
-import "../../Styles/sampleTemplate.css"
+import "../../Styles/sampleTemplate.css";
 
 const SampleTemplate = () => {
   const [fname, setFName] = useState("");
@@ -21,26 +21,33 @@ const SampleTemplate = () => {
     setFile(e.target.files[0]);
   };
 
-  const addTemplateData = async (e) => {
+  const addTemplateData = (e) => {
     e.preventDefault();
+    console.log("file: ", file);
 
     var formData = new FormData();
     formData.append("photo", file);
-    formData.append("fname", fname);
+    // formData.append("fname", fname);
 
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     };
-    const res = await axios.post(
-      "http://localhost:8080/images",
+    fetch(
+      "http://localhost:8080/template/uploadtemplate",
+      {
+        method: "POST",
+      },
       formData,
       config
-    );
-    const data = await res.json();
-    console.log("data: ", data);
-
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("data: ", data);
+      });
     // if (res.data.status === 401 || !res.data) {
     //   console.log("errror");
     // } else {
@@ -58,8 +65,13 @@ const SampleTemplate = () => {
     fetchProducts();
   }, []);
   const fetchProducts = async () => {
-    const response = await axios.get("http://localhost:8081/images");
-    setProducts(response.data);
+    const response = await axios.get(
+      "http://localhost:8080/template/alltemplates"
+    );
+
+    console.log("response.data", response.data);
+    setProducts(response.data.map((e) => ({ ...e, path: encodeURI(e.path) })));
+
     console.log(products);
   };
   // const [dataSource, setDataSource] = useState(data);
@@ -86,7 +98,8 @@ const SampleTemplate = () => {
       width: "30%",
       render: (text, record) => (
         <Image
-          src={record.image}
+          src={`http://localhost:8080/${record.path}`}
+          // src={`/uploads/${record.path}`}
           width={80}
           // height={50}
           preview={{
@@ -120,10 +133,7 @@ const SampleTemplate = () => {
           >
             Delete
           </Button>
-          <Button
-            type="primary"
-            onClick={() => handleAddField(record)}
-          >
+          <Button type="primary" onClick={() => handleAddField(record)}>
             Add Fields
           </Button>
         </Space>
@@ -180,8 +190,8 @@ const SampleTemplate = () => {
             />
           </Form.Item>
           <Form.Item name="image">
-            <input
-            className="inputBox"
+            <Input
+              className="inputBox"
               id="image-upload"
               type="file"
               onChange={setimgfile}
@@ -201,7 +211,7 @@ const SampleTemplate = () => {
         <Table columns={columns} dataSource={products} size="small" />
         <Modal
           title="Edit Product"
-          visible={isModalVisible}
+          open={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
         >
