@@ -11,13 +11,14 @@ import ResetPasswordSuccess from "./Pages/ResetPasswordSuccess/index";
 import ResetPassword from "./Pages/ResetPassword/index";
 import SampleTemplate from "./Pages/SampleTemplate";
 import Error404 from "./Pages/Error404";
+import SampleCertificate from "./Pages/SampleCertificate";
+import CSVDemo from "./Demo/CSVDemo";
 
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<Signup />} />
-
         <Route path="/confirmAccount" element={<ConfirmAccount />} />
         <Route path="/confirmSuccess/:id" element={<ConfirmSuccess />} />
         <Route path="/login" element={<Login />}/> 
@@ -28,13 +29,14 @@ function App() {
           element={<ForgotPasswordMailSent />}
         />
         <Route path="/resetPassword/:id" element={<ResetPassword />} />
-
         <Route
           path="/resetPasswordSuccess"
           element={<ResetPasswordSuccess />}
         />
         <Route path="/sampleTemplate" element={<SampleTemplate />} />
         <Route path="*" element={<Error404 />} />
+        <Route path="/edit" element={<SampleCertificate />} />
+        <Route path="/democsv" element={<CSVDemo />} />
       </Routes>
     </div>
   );

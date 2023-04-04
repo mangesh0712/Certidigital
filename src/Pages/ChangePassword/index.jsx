@@ -6,18 +6,15 @@ import axios from "axios";
 import { useState } from "react";
 
 const ChangePassword = () => {
-  const [changePasswordFormLoading, setChangePasswordFormLoading] = useState(false);
+  const [changePasswordFormLoading, setChangePasswordFormLoading] =
+    useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
   function handleResetPasswordForm(values) {
-
     setChangePasswordFormLoading(true);
     axios
-      .patch(
-        `https://test-production-e6c2.up.railway.app/auth/resetPassword/${id}`,
-        values
-      )
+      .patch(`http://localhost:8080/auth/resetPassword/${id}`, values)
       .then((response) => {
         console.log("Data", response.data);
         if (response.data.message === "Password updated successfully") {

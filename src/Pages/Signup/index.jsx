@@ -39,7 +39,7 @@ const Signup = () => {
   function handleSignupForm(values) {
     console.log("values", values);
     setSignupFormLoading(true);
-    fetch("https://test-production-e6c2.up.railway.app/auth/signup", {
+    fetch("http://localhost:8080/auth/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,8 +51,8 @@ const Signup = () => {
       })
       .then((data) => {
         console.log("Data", data);
-        if (data.message === "successfully registered") {
-          message.success("Signup Successfully");
+        if (data.message === "successfully signup with email") {
+          message.success("successfully signup with email");
           setTimeout(() => {
             navigate("/confirmAccount");
           }, 2000);

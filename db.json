@@ -1,6 +1,10 @@
 {
   "images": [
     {
+      "id": 0,
+      "image": "./CourseComplitionBlankTemplate.jpg"
+    },
+    {
       "id": 1,
       "image": "https://previews.123rf.com/images/andipanggeleng/andipanggeleng1706/andipanggeleng170600013/80860152-blank-certificate-template.jpg"
     },
@@ -56,5 +60,6 @@
       "id": 16,
       "image": "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Certificate-Templates/Black_and_Brown_Certificate_Template_PNG_Image.png?m=1507172103"
     }
-  ]
+  ],
+  "certificateFields": []
 }

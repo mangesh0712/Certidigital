@@ -16,10 +16,7 @@ const ResetPassword = () => {
     console.log("values", values);
     setResetPasswordFormLoading(true);
     axios
-      .patch(
-        `https://test-production-e6c2.up.railway.app/auth/resetPassword/${id}`,
-        values
-      )
+      .patch(`http://localhost:8080/auth/resetPassword/${id}`, values)
       .then((response) => {
         console.log("Data", response.data);
         if (response.data.message === "Password updated successfully") {
