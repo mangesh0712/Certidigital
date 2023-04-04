@@ -11,6 +11,7 @@ import ResetPassword from "./Pages/ResetPassword/index";
 import SampleTemplate from "./Pages/SampleTemplate";
 import Error404 from "./Pages/Error404";
 import SampleCertificate from "./Pages/SampleCertificate";
+import CSVDemo from "./Demo/CSVDemo";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/sampleTemplate" element={<SampleTemplate />} />
         <Route path="*" element={<Error404 />} />
         <Route path="/edit" element={<SampleCertificate />} />
+        <Route path="/democsv" element={<CSVDemo />} />
       </Routes>
     </div>
   );
