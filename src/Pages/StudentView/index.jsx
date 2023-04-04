@@ -1,66 +1,45 @@
 
-import React, { useState } from 'react'
-import { Table } from 'antd';
-import Papa from 'papaparse';
+import React, { useEffect, useState } from 'react'
 
 
-const Studentview = () => {
-    const [data , setdata] = useState([]);
-  const handleUpload = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const csvData = event.target.result;
-      const parsedData = Papa.parse(csvData, { header: true }).data;
-      console.log(parsedData);
-      setdata(parsedData)
-    };
-    reader.readAsText(file);
-  };
- 
-  const columns = [
-    {
-      title: 'BATCH',
-      dataIndex: 'Batch',
-      key: 'Batch',
-      align	:'center',
-      with:100
-    },
-    {
-      title: 'EMAIL',
-      dataIndex: 'Email',
-      key: 'Email',
-      align	:'center',
-      with:100
-    },
-    {
-      title: 'NAME',
-      dataIndex: 'Name',
-      key: 'Name',
-      align	:'center',
-      with:100
-    },
-    {
-      title: 'START-DATE',
-      dataIndex: 'Start-date',
-      key: 'Body',
-      align	:'center',
-      with:100
-    },
-    {
-      title: 'END-DATE',
-      dataIndex: 'End-date',
-      key: 'Subject',
-      align	:'center',
-      with:100
-    },
-  ];
+import {dummyData} from '../../Data/data'
+
+import { Button, Card } from 'antd';
+
+function Studentview() {
+  const [data, setData] = useState([]);
+  const { Meta } = Card;
+  
+  useEffect(() => {
+    // fetch('http://backend-api-url.com/data')
+    //   .then(response => response.json())
+    //   .then(data => setData(data))
+    //   .catch(error => console.log(error));
+    setData(dummyData)
+  }, []);
+  
   return (
-    <>
-    <input type="file" onChange={handleUpload} />
-    <Table dataSource={data} columns={columns} size="middle" />
-    </>
-  )
+    <div>
+        <h1 style={{textAlign:"center"}}>Certificates you have achived</h1>
+        <div style={{display:"flex",flexWrap:"wrap",gap:"20px", marginTop:"20px",paddingLeft:"120px"}}>
+          {data.map(item => (
+            <Card
+            hoverable
+            style={{
+              width: 350,
+              height:340,
+            }}
+            cover={<img  alt="example" src={item.certImage} />}
+          >
+            <div style={{display:"flex",gap:"100px"}}>
+            <Meta title={item.name} />
+            <Button>Share</Button>
+            </div>
+            
+          </Card>
+          ))}
+        </div>
+    </div>
+  );
 }
-
 export default Studentview
