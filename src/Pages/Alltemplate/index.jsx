@@ -48,7 +48,7 @@ const Alltemplate = () => {
       render: (text, record) => (
         <Space size="middle">
           <Button onClick={() => handleDelete(record)}>Delete</Button>
-          <Button >Update</Button>
+          <Button onClick={()=>handleEdit(record)}>Update</Button>
         </Space>
       ),
     },

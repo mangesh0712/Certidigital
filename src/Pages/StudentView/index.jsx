@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
+import axios from "axios";
 
 
 import {dummyData} from '../../Data/data'
@@ -20,7 +21,7 @@ function Studentview() {
   
   return (
     <div>
-        <h1 style={{textAlign:"center"}}>Certificates you have achived</h1>
+        <h1 style={{textAlign:"center"}}>Certificates you have achieved</h1>
         <div style={{display:"flex",flexWrap:"wrap",gap:"20px", marginTop:"20px",paddingLeft:"120px"}}>
           {data.map(item => (
             <Card
