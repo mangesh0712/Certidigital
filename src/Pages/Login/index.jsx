@@ -14,14 +14,14 @@ const Login = () => {
     console.log("values", values);
     setLoginFormLoading(true);
     axios
-      .post("https://test-production-e6c2.up.railway.app/auth/login", values)
+      .post("http://localhost:8080/auth/login", values)
       .then((response) => {
         console.log("Data", response.data);
         if (response.data.message === "Login successful") {
           message.success("Logged in Successfully");
           localStorage.setItem("authDetails", JSON.stringify(response.data));
           setTimeout(() => {
-            navigate("/positions");
+            navigate("/sam");
           }, 2000);
         }
         setLoginFormLoading(false);

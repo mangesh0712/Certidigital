@@ -34,10 +34,7 @@ const ForgotPassword = () => {
   function handleEmailSentForm(values) {
     setForgotPasswordLoading(true);
     axios
-      .post(
-        "https://test-production-e6c2.up.railway.app/auth/forgetpassword",
-        values
-      )
+      .post("http://localhost:8080/auth/forgetpassword", values)
       .then((response) => {
         console.log("Data", response.data);
         if (response.data.message === "Password reset email sent") {

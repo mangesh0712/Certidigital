@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Upload, Button, Table } from 'antd';
 import { useNavigate  } from "react-router-dom";
@@ -74,5 +75,4 @@ const SampleTemplate = () => {
 export default SampleTemplate;
 
 
-;
 
