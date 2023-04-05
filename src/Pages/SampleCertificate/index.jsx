@@ -102,12 +102,16 @@ const SampleCertificate = () => {
 
     canvas.style.width = "100%"; // Set the width of the canvas to 50%
     canvas.width = canvas.offsetWidth; // Set the width of the canvas to its offsetWidth
+    canvas.style.border="5px solid black"
     const aspectRatio = 1008 / 612;
     canvas.height = Math.floor(canvas.width / aspectRatio);
     canvas.style.background = "url('./CourseComplitionBlankTemplate.jpg')";
     canvas.style.backgroundSize = "cover";
     let canvas_width = canvas.width;
+    console.log("canvas_width: ", canvas_width);
     let canvas_height = canvas.height;
+    console.log("canvas_height: ", canvas_height);
+
     let offset_x;
     let offset_y;
 

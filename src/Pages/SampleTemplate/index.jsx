@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Form, Upload, Button, Table, Space, Modal, Input, Image } from "antd";
+import { Form, message, Button, Table, Space, Modal, Input, Image } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import "../../Styles/sampleTemplate.css";
@@ -25,35 +24,30 @@ const SampleTemplate = () => {
     e.preventDefault();
     console.log("file: ", file);
 
-    var formData = new FormData();
-    formData.append("photo", file);
-    // formData.append("fname", fname);
+    const formData = new FormData();
+    formData.append("image", file);
 
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-    fetch(
-      "http://localhost:8080/template/uploadtemplate",
-      {
-        method: "POST",
-      },
-      formData,
-      config
-    )
+    fetch("http://localhost:8080/template/uploadtemplate", {
+      method: "POST",
+      body: formData,
+    })
       .then((response) => {
-        return response.json();
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
       })
       .then((data) => {
         console.log("data: ", data);
+        message.success("Template uploaded successfully!");
+        fetchProducts();
+      })
+      .catch((error) => {
+        console.error("Error uploading image:", error);
+        message.success("Error uploading template!");
       });
-    // if (res.data.status === 401 || !res.data) {
-    //   console.log("errror");
-    // } else {
-    //   navigate("/templates");
-    // }
   };
+
 
   // Tablesfunctions
 
@@ -64,17 +58,20 @@ const SampleTemplate = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
-  const fetchProducts = async () => {
-    const response = await axios.get(
-      "http://localhost:8080/template/alltemplates"
-    );
 
-    console.log("response.data", response.data);
-    setProducts(response.data.map((e) => ({ ...e, path: encodeURI(e.path) })));
-
-    console.log(products);
+  const fetchProducts = () => {
+    axios
+      .get("http://localhost:8080/template/alltemplates")
+      .then((res) => {
+        // console.log("res.data: ", res.data);
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.log("Error:", err);
+        message.error("Error loading templates");
+      });
   };
-  // const [dataSource, setDataSource] = useState(data);
+
   const columns = [
     {
       title: "SL ID",
@@ -82,6 +79,11 @@ const SampleTemplate = () => {
       key: "id",
       align: "center",
       width: "15%",
+      sorter: (a, b) => a.id - b.id,
+      render: (id, record, index) => {
+        ++index;
+        return index;
+      },
     },
     {
       title: "NAME",
@@ -98,10 +100,8 @@ const SampleTemplate = () => {
       width: "30%",
       render: (text, record) => (
         <Image
-          src={`http://localhost:8080/${record.path}`}
-          // src={`/uploads/${record.path}`}
+          src={`http://localhost:8080/template/singletemplate/${record.id}`}
           width={80}
-          // height={50}
           preview={{
             mask: <div style={{ background: "rgba(0, 0, 0, 0.5)" }} />,
           }}
@@ -143,9 +143,21 @@ const SampleTemplate = () => {
   const handleAddField = (record) => {
     navigate("/edit");
   };
-  const handleDelete = async (record) => {
-    await axios.delete(`http://localhost:8081/images/${record.id}`);
-    fetchProducts();
+
+  const handleDelete = (record) => {
+    axios
+      .delete(`http://localhost:8080/template/deletetemplate/${record.id}`)
+      .then((res) => {
+        console.log("res: ", res);
+        if (res.data === "Error deleting image from disk") {
+          message.error("Error deleting image from disk");
+        }
+        fetchProducts();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        message.error(error.message);
+      });
   };
 
   const handleEdit = (record) => {
@@ -174,7 +186,6 @@ const SampleTemplate = () => {
 
   return (
     <div>
-      {/* <h1 style={{ textAlign: "center" }}>Upload Template</h1> */}
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}
       >
@@ -182,33 +193,28 @@ const SampleTemplate = () => {
           <h3 style={{ marginTop: "5px" }}>
             Upload Template <ArrowRightOutlined />{" "}
           </h3>
-          <Form.Item name="name">
-            <Input
-              placeholder="Template Name"
-              value={fname}
-              onChange={setdata}
-            />
-          </Form.Item>
           <Form.Item name="image">
             <Input
               className="inputBox"
               id="image-upload"
               type="file"
               onChange={setimgfile}
-              // accept="image/*"
-              // style={{ display: "none" }}
             />
           </Form.Item>
           <Form.Item>
             <Button type="primary" onClick={addTemplateData}>
-              SUBMIT
+              Upload
             </Button>
           </Form.Item>
         </Form>
       </div>
-      {/* <Table dataSource={tableData} columns={columns} /> */}
       <div style={{ marginTop: 20 }}>
-        <Table columns={columns} dataSource={products} size="small" />
+        <Table
+          columns={columns}
+          dataSource={products}
+          rowKey={(record) => record.id}
+          size="small"
+        ></Table>
         <Modal
           title="Edit Product"
           open={isModalVisible}

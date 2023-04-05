@@ -39,7 +39,7 @@ function App() {
         <Route path="/uploadtemplate" element={<SampleTemplate />} />
         <Route path="/userview" element={<Studentview />} />
         <Route path="templates" element={<Alltemplate />} />
-        <Route path="/edit" element={<SampleCertificate />} />
+        <Route path="/sampleCertificate/:id" element={<SampleCertificate />} />
         <Route path="*" element={<Error404 />} />
         <Route path="/democsv" element={<CSVDemo />} />
       </Routes>
