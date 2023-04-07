@@ -148,6 +148,9 @@ const SampleCertificate = () => {
       let canvas_offset = canvas.getBoundingClientRect();
       offset_x = canvas_offset.left;
       offset_y = canvas_offset.top;
+      // let canvas_offset = canvas.getBoundingClientRect();
+      // offset_x = canvas_offset.left;
+      // offset_y = canvas_offset.top + window.scrollY; // add window.scrollY to offset_y
     };
     get_offset();
     window.onscroll = function () {
@@ -171,7 +174,6 @@ const SampleCertificate = () => {
         y > shape_top &&
         y < shape_bottom
       ) {
-        // console.log("Yes");
         setShapeId(shape.id);
         return true;
       }
@@ -184,9 +186,7 @@ const SampleCertificate = () => {
       startY = parseInt(event.clientY);
       let index = 0;
       for (let shape of shapes) {
-        // console.log("before if", event, startX, startY);
         if (is_mouse_in_shape(startX, startY, shape)) {
-          // console.log("after if");
           current_shape_index = index;
           setShapeId(shape.id);
           is_dragging = true;
@@ -244,13 +244,13 @@ const SampleCertificate = () => {
         context.font = `${shape.fontWeight} ${shape.fontSize}px ${shape.fontFamily}`;
         let textWidth = context.measureText(shape.text).width;
         let textHeight = shape.fontSize;
-        // shape.width = textWidth+60;
         shape.height = textHeight;
         if (textWidth > shape.width) {
           shape.width = textWidth + 60;
         }
         let centerX = shape.x + shape.width / 2;
         let centerY = shape.y + shape.height / 2;
+        // let centerY = shape.y + shape.height / 2 + window.scrollY;
         context.textBaseline = "middle";
         if (shape.alignment === "center") {
           context.textAlign = "center";
@@ -264,20 +264,24 @@ const SampleCertificate = () => {
           let textY = shape.y + shape.height / 2;
           context.fillText(shape.text, textX, textY);
         }
-        // context.textAlign = "left";
-        // context.fillText(shape.text, shape.x, centerY);
-
-        // context.strokeStyle = "grey";
-        // context.lineWidth = 1;
-        // context.strokeRect(shape.x, shape.y, shape.width, shape.height);
-        // context.fillStyle = "transparent";
-        // context.fillRect(shape.x, shape.y, shape.width, shape.height);
         if (shape.id === shapeId) {
           context.strokeStyle = "grey";
           context.lineWidth = 1;
           context.strokeRect(shape.x, shape.y, shape.width, shape.height);
+          // context.strokeRect(
+          //   shape.x,
+          //   shape.y + window.scrollY,
+          //   shape.width,
+          //   shape.height
+          // ); // add window.scrollY to y-coordinate
           context.fillStyle = "transparent";
           context.fillRect(shape.x, shape.y, shape.width, shape.height);
+          // context.fillRect(
+          //   shape.x,
+          //   shape.y + window.scrollY,
+          //   shape.width,
+          //   shape.height
+          // ); // add window.scrollY to y-coordinate
         }
       }
     };
