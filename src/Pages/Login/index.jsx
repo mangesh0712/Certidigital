@@ -208,7 +208,7 @@ const Login = () => {
                     block
                     type="primary"
                     onClick={() => {
-                      navigate("/signup");
+                      navigate("/");
                     }}
                   >
                     Don't have account, Create Here

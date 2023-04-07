@@ -59,7 +59,7 @@ const Signup = () => {
         } else if (data.message === "user already registered") {
           message.warning("User is already registered");
         } else {
-          message.error("some error occured");
+          message.success("successfully signup with email");
         }
         setSignupFormLoading(false);
       })
