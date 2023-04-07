@@ -24,7 +24,7 @@ function App() {
         <Route path="/" element={<Signup />} />
         <Route path="/confirmAccount" element={<ConfirmAccount />} />
         <Route path="/confirmSuccess/:id" element={<ConfirmSuccess />} />
-        <Route path="/login" element={<Login />}/> 
+        <Route path="/login" element={<Login />} />
         <Route path="/csvTojson" element={<Csvtojson />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route
@@ -39,7 +39,7 @@ function App() {
         <Route path="/uploadtemplate" element={<SampleTemplate />} />
         <Route path="/userview" element={<Studentview />} />
         <Route path="templates" element={<Alltemplate />} />
-        <Route path="/sampleCertificate/:id" element={<SampleCertificate />} />
+        <Route path="/uploadtemplate/:id" element={<SampleCertificate />} />
         <Route path="*" element={<Error404 />} />
         <Route path="/democsv" element={<CSVDemo />} />
       </Routes>
