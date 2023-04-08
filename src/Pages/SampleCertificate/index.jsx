@@ -15,11 +15,11 @@ const SampleCertificate = () => {
       alignment: "center",
       x: 100,
       y: 100,
-      width: 300,
-      height: 50,
-      text: "Pankaj Kumar Ram",
-      fontSize: 25,
-      fontWeight: 800,
+      width: 200,
+      height: 35,
+      text: "Saraswati Panda",
+      fontSize: 35,
+      fontWeight: 600,
       fontColor: "#1F2937",
       fontFamily: "Arial",
     },
@@ -34,6 +34,9 @@ const SampleCertificate = () => {
   const record = JSON.parse(localStorage.getItem("record"));
   const templateHeight = record.height;
   const templateWidth = record.width;
+  const [canvasHeight, setCanvasHeight] = useState();
+  const [canvasWidth, setCanvasWidth] = useState();
+  const [showCsvButton, setshowCsvButton] = useState(true);
 
   // const fetchSingleTemplate = () => {
   //   axios
@@ -51,6 +54,7 @@ const SampleCertificate = () => {
   // }, []);
 
   const addShape = () => {
+    setshowCsvButton(true);
     const numShapes = shapes.length;
     const newY = numShapes * 50 + 100;
     setShapes([
@@ -78,6 +82,7 @@ const SampleCertificate = () => {
   };
   const editShape = (id) => {
     setCurrentShape(null);
+    setshowCsvButton(true);
     let selectedShape = shapes.filter((shape, i) => shape.id == id);
     setCurrentShape(selectedShape[0]);
     form.setFieldsValue(selectedShape[0]);
@@ -118,14 +123,64 @@ const SampleCertificate = () => {
 
   const handleFieldsData = (shapes) => {
     let payload = {
-      shapes,
-      templateHeight,
-      templateWidth,
+      template: id,
+      fields: shapes,
+      canvasHeight,
+      canvasWidth,
     };
     console.log("payload: ", payload);
+
+    fetch("http://localhost:8080/certificate/generate-image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("data: ", data);
+        message.success("Template with fields Saved successfully",1.5)
+        setTimeout(() => {
+          setshowCsvButton(false);
+          message.info("Now you can download the sample CSV for the saved template",4);
+        }, 2500);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        message.error("Error saving the fields")
+      });
   };
 
-  const handleDownloadCSV = () => {};
+  const handleDownloadCSV = () => {
+    fetch(`http://localhost:8080/certificate/samplecsv/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.blob();
+      })
+      .then((data) => {
+        message.success("Downloading the Sample CSV file", 1.5);
+        setTimeout(() => {
+          const url = URL.createObjectURL(data);
+          const a = document.createElement("a");
+          a.href = url;
+          let TemplateName = record?.name;
+          a.download = `${TemplateName} Sample.csv`;
+          document.body.appendChild(a);
+          a.click();
+        }, 1000);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        message.error("Error saving the fields");
+      });
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -139,7 +194,11 @@ const SampleCertificate = () => {
     canvas.style.background = `url(http://localhost:8080/template/singletemplate/${id})`;
     canvas.style.backgroundSize = "cover";
     let canvas_width = canvas.width;
+    setCanvasWidth(canvas_width);
+    console.log("canvas_width: ", canvas_width);
     let canvas_height = canvas.height;
+    setCanvasHeight(canvas_height);
+    console.log("canvas_height: ", canvas_height);
 
     let offset_x;
     let offset_y;
@@ -350,6 +409,7 @@ const SampleCertificate = () => {
                 style={{
                   fontWeight: 600,
                 }}
+                disabled={showCsvButton}
                 onClick={() => handleDownloadCSV(shapes)}
               >
                 Download sample CSV
