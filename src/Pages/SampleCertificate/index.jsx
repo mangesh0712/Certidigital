@@ -1,8 +1,7 @@
 import { Button, Form, Input, InputNumber, Select, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../../Styles/sampleCertificate.css";
-import axios from "axios";
 
 const SampleCertificate = () => {
   let { id } = useParams();
@@ -37,6 +36,7 @@ const SampleCertificate = () => {
   const [canvasHeight, setCanvasHeight] = useState();
   const [canvasWidth, setCanvasWidth] = useState();
   const [showCsvButton, setshowCsvButton] = useState(true);
+  const navigate=useNavigate();
 
   // const fetchSingleTemplate = () => {
   //   axios
@@ -195,10 +195,8 @@ const SampleCertificate = () => {
     canvas.style.backgroundSize = "cover";
     let canvas_width = canvas.width;
     setCanvasWidth(canvas_width);
-    console.log("canvas_width: ", canvas_width);
     let canvas_height = canvas.height;
     setCanvasHeight(canvas_height);
-    console.log("canvas_height: ", canvas_height);
 
     let offset_x;
     let offset_y;
@@ -422,7 +420,7 @@ const SampleCertificate = () => {
                 }}
                 type="primary"
                 block
-                // onClick={() => handleDownloadCSV(shapes)}
+                onClick={() => navigate(`/bulkCertificates/${id}`)}
               >
                 Upload CSV
               </Button>

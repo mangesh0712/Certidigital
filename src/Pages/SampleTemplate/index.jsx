@@ -7,7 +7,7 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import "../../Styles/sampleTemplate.css";
-import HamburgerNavbar from "../../Components/HamburgerNavbar"
+// import HamburgerNavbar from "../../Components/HamburgerNavbar"
 
 const SampleTemplate = () => {
   const [name, setName] = useState("");
@@ -232,7 +232,7 @@ const SampleTemplate = () => {
 
   return (
     <div>
-      <HamburgerNavbar/>
+      {/* <HamburgerNavbar/> */}
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}
       >

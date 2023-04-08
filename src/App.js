@@ -15,6 +15,7 @@ import Error404 from "./Pages/Error404";
 import Alltemplate from './Pages/Alltemplate';
 import Studentview from './Pages/StudentView';
 import CSVDemo from "./Demo/CSVDemo";
+import BulkCertificates from './Pages/BulkCertificates';
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
         <Route path="/confirmAccount" element={<ConfirmAccount />} />
         <Route path="/confirmSuccess/:id" element={<ConfirmSuccess />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/csvTojson" element={<Csvtojson />} />
+        <Route path="/csvTojson/:id" element={<Csvtojson />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route
           path="/forgotPasswordMailSent"
@@ -40,6 +41,7 @@ function App() {
         <Route path="/userview" element={<Studentview />} />
         <Route path="templates" element={<Alltemplate />} />
         <Route path="/uploadtemplate/:id" element={<SampleCertificate />} />
+        <Route path="/bulkCertificates/:id" element={<BulkCertificates />} />
         <Route path="*" element={<Error404 />} />
         <Route path="/democsv" element={<CSVDemo />} />
       </Routes>
