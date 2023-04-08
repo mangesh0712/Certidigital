@@ -21,7 +21,7 @@ const Login = () => {
           message.success("Logged in Successfully");
           localStorage.setItem("authDetails", JSON.stringify(response.data));
           setTimeout(() => {
-            navigate("/sam");
+            navigate("/uploadtemplate");
           }, 2000);
         }
         setLoginFormLoading(false);

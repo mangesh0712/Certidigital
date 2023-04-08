@@ -1,7 +1,7 @@
 
 
 import React, { useState } from 'react'
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 import Papa from 'papaparse';
 
 
@@ -74,8 +74,10 @@ const Csvtojson = () => {
   ];
   return (
     <>
-    <input type="file" onChange={handleUpload} />
+    <input type="file" onChange={handleUpload} style={{height:"30px",fontSize:"15px" ,color:"blue",margin:"5px"}}/> 
+    <Button style={{width:"160px", marginLeft:"-80px" }} type="primary" >Send</Button>
     <Table dataSource={data} columns={columns} size="middle" />
+   
     </>
   )
 }
