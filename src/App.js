@@ -1,4 +1,4 @@
-import Csvtojson from './Pages/csvTojson/Csvtojson';
+import Csvtojson from "./Pages/csvTojson/Csvtojson";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Signup from "./Pages/Signup";
@@ -12,11 +12,12 @@ import ResetPassword from "./Pages/ResetPassword/index";
 import SampleTemplate from "./Pages/SampleTemplate";
 import SampleCertificate from "./Pages/SampleCertificate";
 import Error404 from "./Pages/Error404";
-import Alltemplate from './Pages/Alltemplate';
-import Studentview from './Pages/StudentView';
+import Alltemplate from "./Pages/Alltemplate";
+import Studentview from "./Pages/StudentView";
 import CSVDemo from "./Demo/CSVDemo";
-import BulkCertificates from './Pages/BulkCertificates';
-
+import BulkCertificates from "./Pages/BulkCertificates";
+import AdminRoutes from "./ProtectedRoutes/AdminRoutes";
+import StudentRoutes from "./ProtectedRoutes/StudentRoutes";
 
 function App() {
   return (
@@ -37,13 +38,27 @@ function App() {
           path="/resetPasswordSuccess"
           element={<ResetPasswordSuccess />}
         />
-        <Route path="/uploadtemplate" element={<SampleTemplate />} />
-        <Route path="/userview" element={<Studentview />} />
-        <Route path="templates" element={<Alltemplate />} />
-        <Route path="/uploadtemplate/:id" element={<SampleCertificate />} />
-        <Route path="/bulkCertificates/:id" element={<BulkCertificates />} />
         <Route path="*" element={<Error404 />} />
-        <Route path="/democsv" element={<CSVDemo />} />
+
+        {/* Admin Routes */}
+        <Route
+          path="/sampletemplate"
+          element={<AdminRoutes Component={SampleTemplate} />}
+        />
+        <Route
+          path="/sampletemplate/:id"
+          element={<AdminRoutes Component={SampleCertificate} />}
+        />
+        <Route
+          path="/bulkCertificates/:id"
+          element={<AdminRoutes Component={BulkCertificates} />}
+        />
+
+        {/* Student Routes */}
+        <Route
+          path="/userview"
+          element={<StudentRoutes Component={Studentview} />}
+        />
       </Routes>
     </div>
   );
