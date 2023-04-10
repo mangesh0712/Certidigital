@@ -64,7 +64,7 @@ const UserAvatar = () => {
         defaultSelectedKeys={["user"]}
         onClick={(info) => {
           console.log(info.key);
-          if (info.key === "dashboard") {
+          if (info.key === "template") {
             navigate("/sampleTemplate");
           } else if (info.key === "logout") {
             setShowLogout(true);
@@ -84,8 +84,8 @@ const UserAvatar = () => {
             key: "user",
           },
           {
-            label: "Dashboard",
-            key: "dashboard",
+            label: "Template",
+            key: "template",
             icon: <DashboardOutlined />,
           },
           // { label: "My Profile", key: "myProfile", icon: <UserOutlined /> },
