@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Modal, Upload, Button, message, Form, Input } from "antd";
 import { useParams } from "react-router-dom";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import HamburgerNavbar from "../../Components/HamburgerNavbar";
+import Footer from "../../Components/Footer";
 
 const BulkCertificates = () => {
   let { id } = useParams();
+  console.log("id: ", id);
   const [name, setName] = useState("");
   const [csvFile, setCsvFile] = useState("");
 
@@ -20,7 +23,7 @@ const BulkCertificates = () => {
     formData.append("id", id);
     console.log("formdata", formData);
 
-    fetch("http://localhost:8080/batchcertificate/certificate/batch", {
+    fetch(`http://localhost:8080/batchcertificate/certificate/batch/${id}`, {
       method: "POST",
       body: formData,
     })
@@ -67,8 +70,9 @@ const BulkCertificates = () => {
 
   return (
     <>
+    <HamburgerNavbar/>
       <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}
+        style={{ display: "flex", justifyContent: "center", marginTop: "30px",minHeight:"68vh" }}
       >
         <Form layout="inline" onFinish={handleUploadCSV}>
           <h3 style={{ marginTop: "5px" }}>
@@ -98,6 +102,7 @@ const BulkCertificates = () => {
           </Form.Item>
         </Form>
       </div>
+      <Footer/>
       {/* <Button type="primary" onClick={() => setModalVisible(true)}>
         Bulk Certificate Generation
       </Button>

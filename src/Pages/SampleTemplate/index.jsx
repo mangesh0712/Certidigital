@@ -7,7 +7,8 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import "../../Styles/sampleTemplate.css";
-// import HamburgerNavbar from "../../Components/HamburgerNavbar"
+import HamburgerNavbar from "../../Components/HamburgerNavbar"
+import Footer from "../../Components/Footer"
 
 const SampleTemplate = () => {
   const [name, setName] = useState("");
@@ -16,6 +17,8 @@ const SampleTemplate = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setpageSize] = useState(5);
 
   const navigate = useNavigate();
 
@@ -183,7 +186,7 @@ const SampleTemplate = () => {
   const handleAddField = (record) => {
     console.log("record: ", record);
     localStorage.setItem("record", JSON.stringify(record));
-    navigate(`/uploadtemplate/${record.id}`);
+    navigate(`/sampleTemplate/${record.id}`);
   };
 
   // const handleDelete = (record) => {
@@ -232,9 +235,9 @@ const SampleTemplate = () => {
 
   return (
     <div>
-      {/* <HamburgerNavbar/> */}
+      <HamburgerNavbar />
       <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}
+        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
       >
         <Form layout="inline" onFinish={addTemplateData}>
           <h3 style={{ marginTop: "5px" }}>
@@ -286,12 +289,21 @@ const SampleTemplate = () => {
           </Form.Item>
         </Form>
       </div>
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: 10 }}>
         <Table
+          style={{ minHeight: "61.2vh" }}
           columns={columns}
           dataSource={templates}
           rowKey={(record) => record.id}
           size="small"
+          pagination={{
+            current: page,
+            pageSize: pageSize,
+            onChange: (page, pageSize) => {
+              setPage(page);
+              setpageSize(pageSize);
+            },
+          }}
         ></Table>
         <Modal
           title="Edit Template Name"
@@ -320,6 +332,7 @@ const SampleTemplate = () => {
           </Form>
         </Modal>
       </div>
+      <Footer />
     </div>
   );
 };

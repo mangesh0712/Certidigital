@@ -54,7 +54,7 @@
 }
 .navHorizontalMenu div:hover:after {
   width: 100%;
-  background: #4e46dc;
+  background: #1677ff;
 }
 
 .navAvatarContainer {
@@ -62,9 +62,9 @@
   align-items: center;
 }
 
- .ant-menu-item-selected {
-    color: #4E46DC !important;
-  }
+ /* .ant-menu-item-selected {
+    color: #1677ff !important;
+  } */
 
 .drawerMenu a {
   display: block;

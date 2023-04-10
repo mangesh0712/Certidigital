@@ -6,6 +6,8 @@ import axios from "axios";
 import {dummyData} from '../../Data/data'
 
 import { Button, Card } from 'antd';
+import HamburgerNavbar from '../../Components/HamburgerNavbar';
+import Footer from '../../Components/Footer';
 
 function Studentview() {
   const [data, setData] = useState([]);
@@ -21,6 +23,7 @@ function Studentview() {
   
   return (
     <div>
+      <HamburgerNavbar/>
         <h1 style={{textAlign:"center"}}>Certificates you have achieved</h1>
         <div style={{display:"flex",flexWrap:"wrap",gap:"20px", marginTop:"20px",paddingLeft:"120px"}}>
           {data.map(item => (
@@ -40,6 +43,7 @@ function Studentview() {
           </Card>
           ))}
         </div>
+        <Footer/>
     </div>
   );
 }

@@ -12,9 +12,9 @@ const SampleCertificate = () => {
       id: 1,
       name: "Name",
       alignment: "center",
-      x: 100,
-      y: 100,
-      width: 200,
+      x: 50,
+      y: 50,
+      width: 450,
       height: 35,
       text: "Saraswati Panda",
       fontSize: 35,
@@ -61,7 +61,7 @@ const SampleCertificate = () => {
       ...shapes,
       {
         id: numShapes + 1,
-        name: "Blank Field",
+        name: "",
         alignment: "center",
         x: newY,
         y: newY,
@@ -121,6 +121,7 @@ const SampleCertificate = () => {
     setCurrentShape(null);
   };
 
+  // save Feilds API
   const handleFieldsData = (shapes) => {
     let payload = {
       template: id,
@@ -558,7 +559,9 @@ const SampleCertificate = () => {
                         <InputNumber />
                       </Form.Item>
                     </div>
-                    <Form.Item extra="Please give the 'Field Name' same as the csv file field names.">
+                    <Form.Item 
+                      // extra="Please give the 'Field Name' same as the csv file field names."
+                    >
                       <div
                         className="FieldTextMainDiv"
                         style={{ marginBottom: -20 }}
