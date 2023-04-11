@@ -26,10 +26,10 @@
   display: none;
 }
 .canvasContainer {
-  width: 65%;
+  width: 60%;
 }
 .sampleCertificateRightBox {
-  width: 30%;
+  width: 35%;
   overflow-y: scroll;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -51,6 +51,13 @@
   justify-content: space-between;
   gap: 15%;
 }
+.submitcsvDiv {
+  display: flex;
+  justify-content: space-between;
+  gap: 5%;
+  margin-bottom: 15px;
+}
+
 .TwoFormItemsDiv {
   display: flex;
   justify-content: space-between;
@@ -66,4 +73,5 @@
 .FieldTextDiv {
   width: 48%;
 }
+
 

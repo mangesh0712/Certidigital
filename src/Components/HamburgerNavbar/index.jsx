@@ -8,7 +8,7 @@ import "../../Styles/HamburgerNav.css";
 const HamburgerNavbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const authDetails = JSON.parse(localStorage.getItem("authDetails"));
-  let firstLetter = authDetails?.userDetails?.userName[0];
+  let firstLetter = authDetails?.userDetails?.name[0];
   firstLetter = firstLetter?.toUpperCase();
 
   return (
@@ -16,7 +16,7 @@ const HamburgerNavbar = () => {
       <div className="navbarContainer">
         <div className="MasailogoContainer">
           <Link to="/">
-            <img src="/Masailogo.svg" alt="Logo" />
+            <img src="/Images/Masailogo.svg" alt="Logo" />
           </Link>
         </div>
         <div className="NavItemsMenuContainer">
@@ -28,10 +28,10 @@ const HamburgerNavbar = () => {
           </div>
           <div className="navHorizontalMenu">
             <div>
-              <Link to="/positions">Positions</Link>
+              <Link to="/sampleTemplate">Templates</Link>
             </div>
             <div>
-              <Link to="/companies">Companies</Link>
+              <Link to="/empty">Empty</Link>
             </div>
           </div>
         </div>
@@ -43,7 +43,7 @@ const HamburgerNavbar = () => {
           >
             <Avatar
               style={{
-                background: "#4E46DC",
+                background: "#1677ff",
                 cursor: "pointer",
               }}
             >
@@ -65,11 +65,11 @@ const HamburgerNavbar = () => {
         }}
       >
         <div className="drawerMenu">
-          <Link to="/positions" onClick={() => setOpenMenu(false)}>
-            Positions
+          <Link to="/sampleTemplate" onClick={() => setOpenMenu(false)}>
+            Templates
           </Link>
-          <Link to="/companies" onClick={() => setOpenMenu(false)}>
-            Companies
+          <Link to="/empty" onClick={() => setOpenMenu(false)}>
+            Empty
           </Link>
         </div>
       </Drawer>

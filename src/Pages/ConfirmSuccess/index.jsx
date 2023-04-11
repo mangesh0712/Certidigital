@@ -41,7 +41,7 @@ const ConfirmSuccess = () => {
           <div id="mailOpeningDiv">
             <img
               width={"100%"}
-              src="/confirmSuccess.png"
+              src="/Images/confirmSuccess.png"
               className="mailOpeningImage"
               alt="mailOpeningImage"
             />

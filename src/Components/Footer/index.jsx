@@ -6,7 +6,7 @@ import {
   LinkedinOutlined,
   YoutubeOutlined,
 } from "@ant-design/icons";
-import "../../Styles/Welcome.css";
+import "../../Styles/masaiFooter.css";
 import { Link } from "react-router-dom";
 
 const Footer = () => {

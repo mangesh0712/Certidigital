@@ -1,22 +1,24 @@
-
 import { Button, Form, Input, InputNumber, Select, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "../../Styles/sampleCertificate.css";
 
 const SampleCertificate = () => {
+  let { id } = useParams();
+
   const canvasRef = useRef(null);
   const [shapes, setShapes] = useState([
     {
       id: 1,
       name: "Name",
       alignment: "center",
-      x: 100,
-      y: 100,
-      width: 300,
-      height: 50,
-      text: "Pankaj Kumar Ram",
-      fontSize: 25,
-      fontWeight: 800,
+      x: 50,
+      y: 50,
+      width: 450,
+      height: 35,
+      text: "Saraswati Panda",
+      fontSize: 35,
+      fontWeight: 600,
       fontColor: "#1F2937",
       fontFamily: "Arial",
     },
@@ -28,15 +30,38 @@ const SampleCertificate = () => {
   let is_dragging = false;
   let startX;
   let startY;
+  const record = JSON.parse(localStorage.getItem("record"));
+  const templateHeight = record.height;
+  const templateWidth = record.width;
+  const [canvasHeight, setCanvasHeight] = useState();
+  const [canvasWidth, setCanvasWidth] = useState();
+  const [showCsvButton, setshowCsvButton] = useState(true);
+  const navigate=useNavigate();
+
+  // const fetchSingleTemplate = () => {
+  //   axios
+  //     .get(`http://localhost:8080/certificate/getSingleTemplate/${id}`)
+  //     .then((res) => {
+  //       console.log("res.data: ", res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error:", err);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   fetchSingleTemplate();
+  // }, []);
 
   const addShape = () => {
+    setshowCsvButton(true);
     const numShapes = shapes.length;
     const newY = numShapes * 50 + 100;
     setShapes([
       ...shapes,
       {
         id: numShapes + 1,
-        name: "Blank Field",
+        name: "",
         alignment: "center",
         x: newY,
         y: newY,
@@ -57,6 +82,7 @@ const SampleCertificate = () => {
   };
   const editShape = (id) => {
     setCurrentShape(null);
+    setshowCsvButton(true);
     let selectedShape = shapes.filter((shape, i) => shape.id == id);
     setCurrentShape(selectedShape[0]);
     form.setFieldsValue(selectedShape[0]);
@@ -64,7 +90,6 @@ const SampleCertificate = () => {
   };
 
   const handleCertificateUpdate = (values) => {
-    console.log("values", values);
     const newValues = {
       ...values,
       width: Number(values.width),
@@ -96,21 +121,83 @@ const SampleCertificate = () => {
     setCurrentShape(null);
   };
 
+  // save Feilds API
+  const handleFieldsData = (shapes) => {
+    let payload = {
+      template: id,
+      fields: shapes,
+      canvasHeight,
+      canvasWidth,
+    };
+    console.log("payload: ", payload);
+
+    fetch("http://localhost:8080/certificate/generate-image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("data: ", data);
+        message.success("Template with fields Saved successfully",1.5)
+        setTimeout(() => {
+          setshowCsvButton(false);
+          message.info("Now you can download the sample CSV for the saved template",4);
+        }, 2500);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        message.error("Error saving the fields")
+      });
+  };
+
+  const handleDownloadCSV = () => {
+    fetch(`http://localhost:8080/certificate/samplecsv/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.blob();
+      })
+      .then((data) => {
+        message.success("Downloading the Sample CSV file", 1.5);
+        setTimeout(() => {
+          const url = URL.createObjectURL(data);
+          const a = document.createElement("a");
+          a.href = url;
+          let TemplateName = record?.name;
+          a.download = `${TemplateName} Sample.csv`;
+          document.body.appendChild(a);
+          a.click();
+        }, 1000);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        message.error("Error saving the fields");
+      });
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    canvas.style.width = "100%"; // Set the width of the canvas to 50%
+    canvas.style.width = "900px"; // Set the width of the canvas to 50%
     canvas.width = canvas.offsetWidth; // Set the width of the canvas to its offsetWidth
-    canvas.style.border="5px solid black"
-    const aspectRatio = 1008 / 612;
+    // canvas.style.border = "5px solid black";
+    const aspectRatio = templateWidth / templateHeight;
     canvas.height = Math.floor(canvas.width / aspectRatio);
-    canvas.style.background = "url('./CourseComplitionBlankTemplate.jpg')";
+    canvas.style.background = `url(http://localhost:8080/template/singletemplate/${id})`;
     canvas.style.backgroundSize = "cover";
     let canvas_width = canvas.width;
-    console.log("canvas_width: ", canvas_width);
+    setCanvasWidth(canvas_width);
     let canvas_height = canvas.height;
-    console.log("canvas_height: ", canvas_height);
+    setCanvasHeight(canvas_height);
 
     let offset_x;
     let offset_y;
@@ -119,6 +206,9 @@ const SampleCertificate = () => {
       let canvas_offset = canvas.getBoundingClientRect();
       offset_x = canvas_offset.left;
       offset_y = canvas_offset.top;
+      // let canvas_offset = canvas.getBoundingClientRect();
+      // offset_x = canvas_offset.left;
+      // offset_y = canvas_offset.top + window.scrollY; // add window.scrollY to offset_y
     };
     get_offset();
     window.onscroll = function () {
@@ -142,7 +232,6 @@ const SampleCertificate = () => {
         y > shape_top &&
         y < shape_bottom
       ) {
-        // console.log("Yes");
         setShapeId(shape.id);
         return true;
       }
@@ -155,9 +244,7 @@ const SampleCertificate = () => {
       startY = parseInt(event.clientY);
       let index = 0;
       for (let shape of shapes) {
-        // console.log("before if", event, startX, startY);
         if (is_mouse_in_shape(startX, startY, shape)) {
-          // console.log("after if");
           current_shape_index = index;
           setShapeId(shape.id);
           is_dragging = true;
@@ -215,13 +302,13 @@ const SampleCertificate = () => {
         context.font = `${shape.fontWeight} ${shape.fontSize}px ${shape.fontFamily}`;
         let textWidth = context.measureText(shape.text).width;
         let textHeight = shape.fontSize;
-        // shape.width = textWidth+60;
         shape.height = textHeight;
         if (textWidth > shape.width) {
           shape.width = textWidth + 60;
         }
         let centerX = shape.x + shape.width / 2;
         let centerY = shape.y + shape.height / 2;
+        // let centerY = shape.y + shape.height / 2 + window.scrollY;
         context.textBaseline = "middle";
         if (shape.alignment === "center") {
           context.textAlign = "center";
@@ -230,25 +317,29 @@ const SampleCertificate = () => {
           context.textAlign = "left";
           context.fillText(shape.text, shape.x, centerY);
         } else if (shape.alignment === "right") {
-          context.textAlign = "right";;
+          context.textAlign = "right";
           let textX = shape.x + shape.width; // Adjust the x-coordinate to align the text to the right
           let textY = shape.y + shape.height / 2;
           context.fillText(shape.text, textX, textY);
         }
-        // context.textAlign = "left";
-        // context.fillText(shape.text, shape.x, centerY);
-        
-        // context.strokeStyle = "grey";
-        // context.lineWidth = 1;
-        // context.strokeRect(shape.x, shape.y, shape.width, shape.height);
-        // context.fillStyle = "transparent";
-        // context.fillRect(shape.x, shape.y, shape.width, shape.height);
         if (shape.id === shapeId) {
           context.strokeStyle = "grey";
           context.lineWidth = 1;
           context.strokeRect(shape.x, shape.y, shape.width, shape.height);
+          // context.strokeRect(
+          //   shape.x,
+          //   shape.y + window.scrollY,
+          //   shape.width,
+          //   shape.height
+          // ); // add window.scrollY to y-coordinate
           context.fillStyle = "transparent";
           context.fillRect(shape.x, shape.y, shape.width, shape.height);
+          // context.fillRect(
+          //   shape.x,
+          //   shape.y + window.scrollY,
+          //   shape.width,
+          //   shape.height
+          // ); // add window.scrollY to y-coordinate
         }
       }
     };
@@ -270,7 +361,6 @@ const SampleCertificate = () => {
         draw_shapes();
       }
     });
-    console.log("shapes", shapes);
     return () => {
       canvas.onmousedown = mouse_down;
       canvas.onmouseup = mouse_up;
@@ -286,10 +376,60 @@ const SampleCertificate = () => {
           <canvas ref={canvasRef} />
         </div>
         <div className="sampleCertificateRightBox">
-          <div className="sampleCertificateAddButton">
-            <Button type="primary" block onClick={addShape}>
+          <div className="submitcsvDiv">
+            <Button
+              type="primary"
+              style={{
+                fontWeight: 600,
+              }}
+              block
+              onClick={addShape}
+            >
               Add New Field
             </Button>
+            <Button
+              type="primary"
+              block
+              style={{
+                background: "#1F2937",
+                color: "White",
+                fontWeight: 600,
+              }}
+              onClick={() => handleFieldsData(shapes)}
+            >
+              Save Template
+            </Button>
+          </div>
+          <div>
+            <div className="submitcsvDiv">
+              <Button
+                type="primary"
+                block
+                style={{
+                  fontWeight: 600,
+                }}
+                disabled={showCsvButton}
+                onClick={() => handleDownloadCSV(shapes)}
+              >
+                Download sample CSV
+              </Button>
+              <Button
+                style={{
+                  background: "#1F2937",
+                  color: "White",
+                  fontWeight: 600,
+                }}
+                type="primary"
+                block
+                onClick={() => navigate(`/bulkCertificates/${id}`)}
+              >
+                Upload CSV
+              </Button>
+            </div>
+            <p style={{ color: "gray", textAlign: "left", marginLeft: 10 }}>
+              Before saving, please make sure you have added all the required
+              fields.
+            </p>
           </div>
           <div
             style={{
@@ -419,7 +559,9 @@ const SampleCertificate = () => {
                         <InputNumber />
                       </Form.Item>
                     </div>
-                    <Form.Item extra="Please give the 'Field Name' same as the csv file field names.">
+                    <Form.Item 
+                      // extra="Please give the 'Field Name' same as the csv file field names."
+                    >
                       <div
                         className="FieldTextMainDiv"
                         style={{ marginBottom: -20 }}
@@ -569,9 +711,13 @@ const SampleCertificate = () => {
               </div>
             </div>
           ) : (
-            <div style={{ textAlign: "center", lineHeight: 0 }}>
-              <h3>Please Select to drag or edit any field</h3>
-              <h3>( To select , click on the field )</h3>
+            <div style={{ textAlign: "center" }}>
+              <h3 style={{ marginTop: -10 }}>
+                Please Select to drag or edit any field
+              </h3>
+              <h3 style={{ marginTop: -20 }}>
+                ( To select , click on the field )
+              </h3>
             </div>
           )}
         </div>
@@ -581,4 +727,3 @@ const SampleCertificate = () => {
 };
 
 export default SampleCertificate;
-

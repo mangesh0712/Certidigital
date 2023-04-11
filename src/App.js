@@ -1,4 +1,4 @@
-import Csvtojson from './Pages/csvTojson/Csvtojson';
+import Csvtojson from "./Pages/csvTojson/Csvtojson";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Signup from "./Pages/Signup";
@@ -12,11 +12,13 @@ import ResetPassword from "./Pages/ResetPassword/index";
 import SampleTemplate from "./Pages/SampleTemplate";
 import SampleCertificate from "./Pages/SampleCertificate";
 import Error404 from "./Pages/Error404";
-import Alltemplate from './Pages/Alltemplate';
-import Studentview from './Pages/StudentView';
+import Alltemplate from "./Pages/Alltemplate";
+import Studentview from "./Pages/StudentView";
 import CSVDemo from "./Demo/CSVDemo";
 import TemplateDetail from './Pages/TemplateDetail';
-
+import BulkCertificates from "./Pages/BulkCertificates";
+import AdminRoutes from "./ProtectedRoutes/AdminRoutes";
+import StudentRoutes from "./ProtectedRoutes/StudentRoutes";
 
 function App() {
   return (
@@ -25,8 +27,8 @@ function App() {
         <Route path="/" element={<Signup />} />
         <Route path="/confirmAccount" element={<ConfirmAccount />} />
         <Route path="/confirmSuccess/:id" element={<ConfirmSuccess />} />
-        <Route path="/login" element={<Login />}/> 
-        <Route path="/csvTojson" element={<Csvtojson />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/csvTojson/:id" element={<Csvtojson />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route
           path="/forgotPasswordMailSent"
@@ -37,13 +39,28 @@ function App() {
           path="/resetPasswordSuccess"
           element={<ResetPasswordSuccess />}
         />
-        <Route path="/uploadtemplate" element={<SampleTemplate />} />
-        <Route path="/userview" element={<Studentview />} />
-        <Route path="templates" element={<Alltemplate />} />
-        <Route path="/sampleCertificate/:id" element={<SampleCertificate />} />
-        <Route path="*" element={<Error404 />} />
-        <Route path="/democsv" element={<CSVDemo />} />
+        <Route path="*" element={<Error404 />}
         <Route path="/templatedetail" element={<TemplateDetail />} />
+        
+        {/* Admin Routes */}
+        <Route
+          path="/sampletemplate"
+          element={<AdminRoutes Component={SampleTemplate} />}
+        />
+        <Route
+          path="/sampletemplate/:id"
+          element={<AdminRoutes Component={SampleCertificate} />}
+        />
+        <Route
+          path="/bulkCertificates/:id"
+          element={<AdminRoutes Component={BulkCertificates} />}
+        />
+
+        {/* Student Routes */}
+        <Route
+          path="/userview"
+          element={<StudentRoutes Component={Studentview} />}
+        />
       </Routes>
     </div>
   );

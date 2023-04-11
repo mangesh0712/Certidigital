@@ -4,35 +4,58 @@ import {
   DashboardOutlined,
   LogoutOutlined,
   LockOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 const UserAvatar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const navigate = useNavigate();
-  
+
   let authDetails = JSON.parse(localStorage.getItem("authDetails"));
   console.log(authDetails);
-  let fullName = authDetails?.userDetails?.userName;
+  let fullName = authDetails?.userDetails?.name;
   let role = authDetails?.userDetails?.role;
-  let userFirstName="User"
+  let userFirstName = "User";
   if (fullName.includes(" ")) {
     userFirstName = fullName?.split(" ");
     userFirstName = userFirstName[0];
-  }else{
-    userFirstName=fullName
+  } else {
+    userFirstName = fullName;
   }
 
-  const handleLogoutFn=()=>{
-    setShowLogout(false);
-    setTimeout(() => {
-      navigate("/");
-      const logout=localStorage.removeItem("authDetails");
-      console.log("logout", logout);
-      message.success("You are succesfully Logged out from your account",3)
-    }, 500);
-  }
-
+  // const handleLogoutFn=()=>{
+  //   setShowLogout(false);
+  //   setTimeout(() => {
+  //     navigate("/login");
+  //     const logout=localStorage.removeItem("authDetails");
+  //     console.log("logout", logout);
+  //     message.success("You are succesfully Logged out from your account",3)
+  //   }, 500);
+  // }
+  const { confirm } = Modal;
+  const handleLogout = () => {
+    confirm({
+      title: "Are you sure you want to logout?",
+      icon: <ExclamationCircleOutlined />,
+      content: "This action cannot be undone.",
+      okText: "Yes, Logout",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        setTimeout(() => {
+          navigate("/login");
+          const logout = localStorage.removeItem("authDetails");
+          console.log("logout", logout);
+          message.success(
+            "You are succesfully Logged out from your account",
+            3
+          );
+        }, 500);
+      },
+      onCancel() {},
+    });
+  };
 
   return (
     <div>
@@ -41,10 +64,11 @@ const UserAvatar = () => {
         defaultSelectedKeys={["user"]}
         onClick={(info) => {
           console.log(info.key);
-          if (info.key === "dashboard") {
-            navigate("/positions");
+          if (info.key === "template") {
+            navigate("/sampleTemplate");
           } else if (info.key === "logout") {
             setShowLogout(true);
+            handleLogout();
           }
         }}
         items={[
@@ -60,8 +84,8 @@ const UserAvatar = () => {
             key: "user",
           },
           {
-            label: "Dashboard",
-            key: "dashboard",
+            label: "Template",
+            key: "template",
             icon: <DashboardOutlined />,
           },
           // { label: "My Profile", key: "myProfile", icon: <UserOutlined /> },
@@ -78,14 +102,14 @@ const UserAvatar = () => {
           },
         ]}
       ></Menu>
-      <Modal
+      {/* <Modal
         title="Are you sure, You want to logout?"
         open={showLogout}
         onCancel={() => setShowLogout(false)}
         onOk={handleLogoutFn}
         okText="Yes, Logout"
         okType="danger"
-      ></Modal>
+      ></Modal> */}
     </div>
   );
 };

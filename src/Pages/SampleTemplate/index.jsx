@@ -2,30 +2,41 @@ import React, { useState, useEffect } from "react";
 import { Form, message, Button, Table, Space, Modal, Input, Image } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ArrowRightOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
 import "../../Styles/sampleTemplate.css";
+import HamburgerNavbar from "../../Components/HamburgerNavbar"
+import Footer from "../../Components/Footer"
 
 const SampleTemplate = () => {
-  const [fname, setFName] = useState("");
+  const [name, setName] = useState("");
   const [file, setFile] = useState("");
+  const [templates, setTemplates] = useState([]);
+  const [form] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setpageSize] = useState(5);
 
   const navigate = useNavigate();
 
-  const setdata = (e) => {
+  const handleTemplateName = (e) => {
     const { value } = e.target;
-    setFName(value);
+    setName(value);
   };
 
-  const setimgfile = (e) => {
+  const setImageFile = (e) => {
     setFile(e.target.files[0]);
   };
 
   const addTemplateData = (e) => {
-    e.preventDefault();
     console.log("file: ", file);
 
     const formData = new FormData();
     formData.append("image", file);
+    formData.append("name", name);
 
     fetch("http://localhost:8080/template/uploadtemplate", {
       method: "POST",
@@ -40,36 +51,68 @@ const SampleTemplate = () => {
       .then((data) => {
         console.log("data: ", data);
         message.success("Template uploaded successfully!");
-        fetchProducts();
+        fetchTemplates();
       })
       .catch((error) => {
         console.error("Error uploading image:", error);
-        message.success("Error uploading template!");
+        message.error("Error uploading template!");
       });
   };
 
-
   // Tablesfunctions
 
-  const [products, setProducts] = useState([]);
-  const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   useEffect(() => {
-    fetchProducts();
+    fetchTemplates();
   }, []);
 
-  const fetchProducts = () => {
+  const fetchTemplates = () => {
     axios
       .get("http://localhost:8080/template/alltemplates")
       .then((res) => {
         // console.log("res.data: ", res.data);
-        setProducts(res.data);
+        setTemplates(res.data);
       })
       .catch((err) => {
         console.log("Error:", err);
-        message.error("Error loading templates");
+        if (err.response.data.message === "Images not found") {
+          // message.warning("Template not found, Please upload one");
+          setTemplates(null);
+        } else {
+          message.error("Error loading templates");
+        }
       });
+  };
+
+  const { confirm } = Modal;
+
+  const handleDelete = (record) => {
+    confirm({
+      title: "Are you sure you want to delete this template?",
+      icon: <ExclamationCircleOutlined />,
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        axios
+          .delete(`http://localhost:8080/template/deletetemplate/${record.id}`)
+          .then((res) => {
+            console.log("res: ", res);
+            if (res.data.message === "Error deleting image from disk") {
+              message.error("Error deleting image from disk");
+            } else if (res.data.message === "Image deleted successfully") {
+              message.success("Template deleted successfully");
+            }
+            fetchTemplates();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            message.error(error.message);
+            fetchTemplates();
+          });
+      },
+      onCancel() {},
+    });
   };
 
   const columns = [
@@ -122,7 +165,7 @@ const SampleTemplate = () => {
             }}
             onClick={() => handleEdit(record)}
           >
-            Update
+            Rename
           </Button>
           <Button
             style={{
@@ -141,24 +184,29 @@ const SampleTemplate = () => {
     },
   ];
   const handleAddField = (record) => {
-    navigate("/edit");
+    console.log("record: ", record);
+    localStorage.setItem("record", JSON.stringify(record));
+    navigate(`/sampleTemplate/${record.id}`);
   };
 
-  const handleDelete = (record) => {
-    axios
-      .delete(`http://localhost:8080/template/deletetemplate/${record.id}`)
-      .then((res) => {
-        console.log("res: ", res);
-        if (res.data === "Error deleting image from disk") {
-          message.error("Error deleting image from disk");
-        }
-        fetchProducts();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        message.error(error.message);
-      });
-  };
+  // const handleDelete = (record) => {
+  //   axios
+  //     .delete(`http://localhost:8080/template/deletetemplate/${record.id}`)
+  //     .then((res) => {
+  //       console.log("res: ", res);
+  //       if (res.data.message === "Error deleting image from disk") {
+  //         message.error("Error deleting image from disk");
+  //       } else if (res.data.message === "Image deleted successfully") {
+  //         message.success("Template deleted successfully");
+  //       }
+  //       fetchTemplates();
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       message.error(error.message);
+  //       fetchTemplates();
+  //     });
+  // };
 
   const handleEdit = (record) => {
     setSelectedProduct(record);
@@ -169,12 +217,13 @@ const SampleTemplate = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      await axios.put(
-        `http://localhost:8081/images/${selectedProduct.id}`,
+      await axios.patch(
+        `http://localhost:8080/template/updatetemplate/${selectedProduct.id}`,
         values
       );
       setIsModalVisible(false);
-      fetchProducts();
+      message.success("Template name renamed successfully");
+      fetchTemplates();
     } catch (error) {
       console.log(error);
     }
@@ -186,48 +235,104 @@ const SampleTemplate = () => {
 
   return (
     <div>
+      <HamburgerNavbar />
       <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}
+        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
       >
-        <Form layout="inline">
+        <Form layout="inline" onFinish={addTemplateData}>
           <h3 style={{ marginTop: "5px" }}>
             Upload Template <ArrowRightOutlined />{" "}
           </h3>
-          <Form.Item name="image">
+          <Form.Item
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter template name",
+              },
+              {
+                whitespace: true,
+                message: "Template name cannot be empty spaces",
+              },
+              { min: 4, message: "name should be greater than 4 letters" },
+            ]}
+          >
+            <Input
+              className="inputBox"
+              placeholder="Template Name"
+              id="image-upload"
+              type="text"
+              onChange={handleTemplateName}
+            />
+          </Form.Item>
+          <Form.Item
+            name="image"
+            rules={[
+              {
+                required: true,
+                message: "Please select file from your computer",
+              },
+            ]}
+          >
             <Input
               className="inputBox"
               id="image-upload"
               type="file"
-              onChange={setimgfile}
+              accept=".jpg,.jpeg,.png"
+              onChange={setImageFile}
             />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" onClick={addTemplateData}>
+            <Button type="primary" htmlType="submit">
               Upload
             </Button>
           </Form.Item>
         </Form>
       </div>
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: 10 }}>
         <Table
+          style={{ minHeight: "61.2vh" }}
           columns={columns}
-          dataSource={products}
+          dataSource={templates}
           rowKey={(record) => record.id}
           size="small"
+          pagination={{
+            current: page,
+            pageSize: pageSize,
+            onChange: (page, pageSize) => {
+              setPage(page);
+              setpageSize(pageSize);
+            },
+          }}
         ></Table>
         <Modal
-          title="Edit Product"
+          title="Edit Template Name"
           open={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
         >
           <Form form={form} layout="vertical">
-            <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter template name",
+                },
+                {
+                  whitespace: true,
+                  message: "Template name cannot be empty spaces",
+                },
+                { min: 4, message: "name should be greater than 4 letters" },
+              ]}
+            >
               <Input />
             </Form.Item>
           </Form>
         </Modal>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -8,7 +8,7 @@ const ConfirmAccount = () => {
           <div id="mailOpeningDiv">
             <img
               width={"100%"}
-              src="/mailOpening1.png"
+              src="/Images/mailOpening1.png"
               className="mailOpeningImage"
               alt="mailOpeningImage"
             />
