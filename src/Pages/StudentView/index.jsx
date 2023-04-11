@@ -1,50 +1,93 @@
-
-import React, { useEffect, useState } from 'react'
-import axios from "axios";
-
-
-import {dummyData} from '../../Data/data'
-
-import { Button, Card } from 'antd';
-import HamburgerNavbar from '../../Components/HamburgerNavbar';
-import Footer from '../../Components/Footer';
+import React, { useEffect, useState } from "react";
+import { Button, Card, Image } from "antd";
+import HamburgerNavbar from "../../Components/HamburgerNavbar";
+import Footer from "../../Components/Footer";
 
 function Studentview() {
   const [data, setData] = useState([]);
   const { Meta } = Card;
-  
+  const authDetails = JSON.parse(localStorage.getItem("authDetails"));
+  let token = authDetails?.token;
+
   useEffect(() => {
-    // fetch('http://backend-api-url.com/data')
-    //   .then(response => response.json())
-    //   .then(data => setData(data))
-    //   .catch(error => console.log(error));
-    setData(dummyData)
+    handleStudentCertificate();
   }, []);
-  
+
+  const handleStudentCertificate = () => {
+    fetch("http://localhost:8080/student/certificate", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("data: ", data);
+        setData(data);
+      }).catch((err)=>{
+        console.log("err: ", err);
+        
+      })
+  };
+
   return (
     <div>
-      <HamburgerNavbar/>
-        <h1 style={{textAlign:"center"}}>Certificates you have achieved</h1>
-        <div style={{display:"flex",flexWrap:"wrap",gap:"20px", marginTop:"20px",paddingLeft:"120px"}}>
-          {data.map(item => (
-            <Card
-            hoverable
-            style={{
-              width: 350,
-              height:340,
-            }}
-            cover={<img  alt="example" src={item.certImage} />}
-          >
-            <div style={{display:"flex",gap:"100px"}}>
-            <Meta title={item.name} />
-            <Button>Share</Button>
-            </div>
-            
-          </Card>
-          ))}
-        </div>
-        <Footer/>
+      <HamburgerNavbar />
+      {Array.isArray(data) && data.length > 0 ? (
+        <h3 style={{ textAlign: "center" }}>Certificates you have achieved</h3>
+      ) : (
+        <h3 style={{ textAlign: "center",height:"6vh" }}>
+          We do not have any certificate associated with your email address.
+        </h3>
+      )}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "20px",
+          marginTop: "20px",
+          paddingLeft: "120px",
+          minHeight: "60.8vh",
+        }}
+      >
+        {Array.isArray(data) && data.length > 0
+          ? data.map((item) => (
+              <Card
+                hoverable
+                style={{
+                  width: 350,
+                  height: 300,
+                }}
+                cover={
+                  <Image
+                    src={`http://localhost:8080/student/certificateimages/${item.id}`}
+                    alt={`${item.name}`}
+                    preview={{
+                      mask: (
+                        <div style={{ background: "rgba(0, 0, 0, 0.5)" }} />
+                      ),
+                    }}
+                  />
+                }
+              >
+                <div style={{ display: "flex", gap: "100px" }}>
+                  <Meta title={item.name} />
+                  <Button>Share</Button>
+                </div>
+              </Card>
+            ))
+          : null
+            // <div style={{width:"100%"}}>
+            //   <h3 style={{ textAlign: "center" }}>
+            //     We do not have any certificate associated with your email address.
+            //   </h3>
+            // </div>
+        }
+      </div>
+      <Footer />
     </div>
   );
 }
-export default Studentview
+export default Studentview;

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Form, message, Button, Table, Space, Modal, Input, Image } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import {
   ArrowRightOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import "../../Styles/sampleTemplate.css";
-import HamburgerNavbar from "../../Components/HamburgerNavbar"
-import Footer from "../../Components/Footer"
+import HamburgerNavbar from "../../Components/HamburgerNavbar";
+import Footer from "../../Components/Footer";
 
 const SampleTemplate = () => {
   const [name, setName] = useState("");
@@ -134,6 +134,9 @@ const SampleTemplate = () => {
       key: "name",
       align: "center",
       width: "25%",
+      render: (text, record) => (
+        <Link to={`/templatedetail/${record.id}`}>{text}</Link>
+      ),
     },
     {
       title: "TEMPLATE",
