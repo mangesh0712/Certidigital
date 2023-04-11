@@ -15,6 +15,7 @@ import Error404 from "./Pages/Error404";
 import Alltemplate from "./Pages/Alltemplate";
 import Studentview from "./Pages/StudentView";
 import CSVDemo from "./Demo/CSVDemo";
+import TemplateDetail from './Pages/TemplateDetail';
 import BulkCertificates from "./Pages/BulkCertificates";
 import AdminRoutes from "./ProtectedRoutes/AdminRoutes";
 import StudentRoutes from "./ProtectedRoutes/StudentRoutes";
@@ -38,8 +39,9 @@ function App() {
           path="/resetPasswordSuccess"
           element={<ResetPasswordSuccess />}
         />
-        <Route path="*" element={<Error404 />} />
-
+        <Route path="*" element={<Error404 />}
+        <Route path="/templatedetail" element={<TemplateDetail />} />
+        
         {/* Admin Routes */}
         <Route
           path="/sampletemplate"
