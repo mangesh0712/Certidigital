@@ -8,8 +8,13 @@ import Footer from "../../Components/Footer";
 const BulkCertificates = () => {
   let { id } = useParams();
   console.log("id: ", id);
-  const [name, setName] = useState("");
+  const [batchName, setBatchName] = useState("");
   const [csvFile, setCsvFile] = useState("");
+
+  const handleBatchName = (e) => {
+    const { value } = e.target;
+    setBatchName(value);
+  };
 
   const handleCsvFile = (e) => {
     setCsvFile(e.target.files[0]);
@@ -21,6 +26,7 @@ const BulkCertificates = () => {
     const formData = new FormData();
     formData.append("csv", csvFile);
     formData.append("id", id);
+    formData.append("batch", batchName);
     console.log("formdata", formData);
 
     fetch(`http://localhost:8080/batchcertificate/certificate/batch/${id}`, {
@@ -70,14 +76,41 @@ const BulkCertificates = () => {
 
   return (
     <>
-    <HamburgerNavbar/>
+      <HamburgerNavbar />
       <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "30px",minHeight:"68vh" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "30px",
+          minHeight: "68vh",
+        }}
       >
         <Form layout="inline" onFinish={handleUploadCSV}>
           <h3 style={{ marginTop: "5px" }}>
             Upload CSV File <ArrowRightOutlined />{" "}
           </h3>
+          <Form.Item
+            name="batch"
+            rules={[
+              {
+                required: true,
+                message: "Please enter batch name",
+              },
+              {
+                whitespace: true,
+                message: "Batch name cannot be empty spaces",
+              },
+              { min: 4, message: "name should be greater than 4 letters" },
+            ]}
+          >
+            <Input
+              className="inputBox"
+              placeholder="Batch Name"
+              id="image-upload"
+              type="text"
+              onChange={handleBatchName}
+            />
+          </Form.Item>
           <Form.Item
             name="image"
             rules={[
@@ -102,7 +135,7 @@ const BulkCertificates = () => {
           </Form.Item>
         </Form>
       </div>
-      <Footer/>
+      <Footer />
       {/* <Button type="primary" onClick={() => setModalVisible(true)}>
         Bulk Certificate Generation
       </Button>
