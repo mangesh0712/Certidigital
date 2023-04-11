@@ -21,7 +21,12 @@ const Login = () => {
           message.success("Logged in Successfully");
           localStorage.setItem("authDetails", JSON.stringify(response.data));
           setTimeout(() => {
-            navigate("/sampletemplate");
+            let authDetails = JSON.parse(localStorage.getItem("authDetails"));
+            if (authDetails?.userDetails?.role === "Admin") {
+              navigate("/sampletemplate");
+            } else {
+              navigate("/userview");
+            }
           }, 2000);
         }
         setLoginFormLoading(false);
@@ -42,8 +47,8 @@ const Login = () => {
 
   const autofillStudent = () => {
     form.setFieldsValue({
-      email: "demoStudent@gmail.com",
-      password: "Student@123",
+      email: "pankajkr885@gmail.com",
+      password: "Pankaj@123",
     });
   };
 

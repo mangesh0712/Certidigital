@@ -10,6 +10,7 @@ const HamburgerNavbar = () => {
   const authDetails = JSON.parse(localStorage.getItem("authDetails"));
   let firstLetter = authDetails?.userDetails?.name[0];
   firstLetter = firstLetter?.toUpperCase();
+  let role=authDetails?.userDetails?.role;
 
   return (
     <div className="navbar">
@@ -28,11 +29,16 @@ const HamburgerNavbar = () => {
           </div>
           <div className="navHorizontalMenu">
             <div>
-              <Link to="/sampleTemplate">Templates</Link>
+              {role === "Admin" ? (
+                <Link to="/sampleTemplate">Templates</Link>
+              ) : (
+                // <Link to="/sampleTemplate">Templates</Link>
+                null
+              )}
             </div>
-            <div>
+            {/* <div>
               <Link to="/empty">Empty</Link>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="navAvatarContainer">
@@ -68,9 +74,9 @@ const HamburgerNavbar = () => {
           <Link to="/sampleTemplate" onClick={() => setOpenMenu(false)}>
             Templates
           </Link>
-          <Link to="/empty" onClick={() => setOpenMenu(false)}>
+          {/* <Link to="/empty" onClick={() => setOpenMenu(false)}>
             Empty
-          </Link>
+          </Link> */}
         </div>
       </Drawer>
     </div>
