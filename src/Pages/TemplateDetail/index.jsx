@@ -1,36 +1,66 @@
 import React from "react";
 import "../../Styles/Templatedetail.css";
-import { List, Card, Layout, theme, Button, Table } from "antd";
+import { List, Card, Layout, theme, Button, Table, message } from "antd";
 import HamburgerNavbar from "../../Components/HamburgerNavbar";
 import Footer from "../../Components/Footer";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TemplateDetail = () => {
+  let { id } = useParams();
+  const navigate=useNavigate();
+
+  const batchData = [
+    { id: 1, batch: "Web 16", count: 141 },
+    { id: 2, batch: "Web 19", count: 92 },
+    { id: 3, batch: "Web 20", count: 108 },
+  ];
 
   const columns = [
     {
-      title: "SL ID",
-      dataIndex: "id",
-      key: "id",
+      title: "Batch",
+      dataIndex: "batch",
+      key: "batch",
       align: "center",
       width: "15%",
-      sorter: (a, b) => a.id - b.id,
-      render: (id, record, index) => {
-        ++index;
-        return index;
-      },
+      // sorter: (a, b) => a.id - b.id,
+      render: (text) => <span style={{ color: "#F94A29",fontWeight:"600" }}>{text}</span>,
     },
     {
-      title: "NAME",
-      dataIndex: "name",
-      key: "name",
+      title: "Total Certificates count",
+      dataIndex: "count",
+      key: "count",
       align: "center",
       width: "25%",
-      render: (text, record) => (
-        <Link to={`/templatedetail/${record.id}`}>{text}</Link>
-      ),
     },
   ];
+
+  const handleDownloadCSV = () => {
+    fetch(`http://localhost:8080/certificate/samplecsv/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.blob();
+      })
+      .then((data) => {
+        message.success("Downloading the Sample CSV file", 1.5);
+        setTimeout(() => {
+          const url = URL.createObjectURL(data);
+          const a = document.createElement("a");
+          a.href = url;
+          // let TemplateName = record?.name;
+          a.download = `Sample.csv`;
+          document.body.appendChild(a);
+          a.click();
+        }, 1000);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        message.error("Error saving the fields");
+      });
+  };
 
   
   return (
@@ -46,24 +76,38 @@ const TemplateDetail = () => {
             />
           </div>
           <div className="rightSideDetailsContainer">
-            {/* <div style={{ display: "flex", justifyContent: "space-around" }}>
-              <h3>Web 16: </h3>
-              <h3>30</h3>
-            </div> */}
+            <div className="submitcsvDiv">
+              <Button
+                type="primary"
+                block
+                style={{
+                  fontWeight: 600,
+                }}
+                // disabled={showCsvButton}
+                onClick={() => handleDownloadCSV()}
+              >
+                Download sample CSV
+              </Button>
+              <Button
+                style={{
+                  background: "#1F2937",
+                  color: "White",
+                  fontWeight: 600,
+                }}
+                type="primary"
+                block
+                onClick={() => navigate(`/bulkCertificates/${id}`)}
+              >
+                Generate Batch Certificate
+              </Button>
+            </div>
             <Table
               style={{ minHeight: "61.2vh" }}
               columns={columns}
-              // dataSource={templates}
+              dataSource={batchData}
               rowKey={(record) => record.id}
               size="small"
-              // pagination={{
-              //   current: page,
-              //   pageSize: pageSize,
-              //   onChange: (page, pageSize) => {
-              //     setPage(page);
-              //     setpageSize(pageSize);
-              //   },
-              // }}
+              pagination={false}
             ></Table>
           </div>
         </div>
