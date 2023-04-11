@@ -1,0 +1,21 @@
+.templateDetailMainContainer {
+  height: 100vh;
+  /* background-color: red; */
+}
+
+.templateDetailContainer {
+  display: flex;
+  gap: 1%;
+  min-height: 72.3vh;
+}
+
+.leftSideCertificateImageBox {
+  width: 60%;
+  /* background-color: wheat; */
+}
+
+.rightSideDetailsContainer {
+  padding: 0 20px;
+  width: 39%;
+  /* background-color: aquamarine; */
+}
