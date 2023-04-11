@@ -15,6 +15,7 @@ import Error404 from "./Pages/Error404";
 import Alltemplate from './Pages/Alltemplate';
 import Studentview from './Pages/StudentView';
 import CSVDemo from "./Demo/CSVDemo";
+import TemplateDetail from './Pages/TemplateDetail';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/sampleCertificate/:id" element={<SampleCertificate />} />
         <Route path="*" element={<Error404 />} />
         <Route path="/democsv" element={<CSVDemo />} />
+        <Route path="/templatedetail" element={<TemplateDetail />} />
       </Routes>
     </div>
   );
