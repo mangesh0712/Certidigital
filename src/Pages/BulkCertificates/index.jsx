@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { Modal, Upload, Button, message, Form, Input } from "antd";
+import { Modal, Upload, Button, message, Form, Input, Table } from "antd";
 import { useParams } from "react-router-dom";
-import { ArrowRightOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
 import HamburgerNavbar from "../../Components/HamburgerNavbar";
 import Footer from "../../Components/Footer";
 
@@ -25,7 +29,7 @@ const BulkCertificates = () => {
 
     const formData = new FormData();
     formData.append("csv", csvFile);
-    formData.append("id", id);
+    // formData.append("id", id);
     formData.append("batch", batchName);
     console.log("formdata", formData);
 
@@ -34,9 +38,9 @@ const BulkCertificates = () => {
       body: formData,
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok", response);
+        // }
         return response.text();
       })
       .then((data) => {
@@ -49,6 +53,43 @@ const BulkCertificates = () => {
       });
   };
 
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      width: "35%",
+      align: "center",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      width: "45%",
+      align: "center",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      width: "20%",
+      align: "center",
+      render: (status) => {
+        return status ? (
+          <CheckCircleOutlined style={{ color: "green" }} />
+        ) : (
+          <CloseCircleOutlined style={{ color: "red" }} />
+        );
+      },
+    },
+  ];
+  const data = [];
+  for (let i = 0; i < 1000; i++) {
+    let status = Math.random() < 0.5 ? true : false;
+    data.push({
+      key: i,
+      name: `Pankaj Kumar Ram ${i + 1}`,
+      email: `pankajkr${i + 1}@gmail.com`,
+      status: status,
+    });
+  }
   //   setCsvFile(null);
 
   // try {
@@ -82,7 +123,7 @@ const BulkCertificates = () => {
           display: "flex",
           justifyContent: "center",
           marginTop: "30px",
-          minHeight: "68vh",
+          // minHeight: "68vh",
         }}
       >
         <Form layout="inline" onFinish={handleUploadCSV}>
@@ -135,7 +176,26 @@ const BulkCertificates = () => {
           </Form.Item>
         </Form>
       </div>
-      <Footer />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Table
+          columns={columns}
+          dataSource={data}
+          style={{ width: "50%" }}
+          pagination={{
+            pageSize: 50,
+          }}
+          scroll={{
+            y: 380,
+          }}
+        />
+      </div>
+      <div style={{display:"flex",justifyContent:"center"}}>
+        <Button type="primary" htmlType="submit">
+          Download all Failed Records
+        </Button>
+      </div>
+
+      {/* <Footer /> */}
       {/* <Button type="primary" onClick={() => setModalVisible(true)}>
         Bulk Certificate Generation
       </Button>

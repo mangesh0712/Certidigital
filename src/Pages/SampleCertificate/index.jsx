@@ -123,6 +123,7 @@ const SampleCertificate = () => {
 
   // save Feilds API
   const handleFieldsData = (shapes) => {
+    
     let payload = {
       template: id,
       fields: shapes,
