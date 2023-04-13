@@ -1,19 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Upload, Button, message, Form, Input, Table } from "antd";
 import { useParams } from "react-router-dom";
 import {
   ArrowRightOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import HamburgerNavbar from "../../Components/HamburgerNavbar";
 import Footer from "../../Components/Footer";
 
 const BulkCertificates = () => {
   let { id } = useParams();
-  console.log("id: ", id);
   const [batchName, setBatchName] = useState("");
   const [csvFile, setCsvFile] = useState("");
+  const [mailData, setMailData] = useState([]);
+  const [allMailSentCheck, setAllMailSentCheck] = useState(false);
+  const [intervalId, setIntervalId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleBatchName = (e) => {
     const { value } = e.target;
@@ -46,6 +50,7 @@ const BulkCertificates = () => {
       .then((data) => {
         console.log("data: ", data);
         message.success("CSV file uploaded successfully!");
+        getMailStatus();
       })
       .catch((error) => {
         console.error("Error uploading CSV file:", error);
@@ -53,29 +58,61 @@ const BulkCertificates = () => {
       });
   };
 
+  const startInterval = () => {
+    const id = setInterval(() => {
+      getMailStatus();
+    }, 2000);
+    setIntervalId(id);
+  };
+
+  const stopInterval = () => {
+    clearInterval(intervalId);
+  };
+
+  const getMailStatus = () => {
+    fetch("http://localhost:8080/batchcertificate/email-status")
+      .then((res) => res.json())
+      .then((data) => {
+        setMailData(data);
+        console.log("data: ", data);
+        setLoading(data.some((item) => item.result === null));
+      })
+      .catch((err) => console.log("err: ", err));
+  };
+
+  useEffect(() => {
+    // getMailStatus();
+    const interval = setInterval(() => {
+      getMailStatus();
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
-      width: "35%",
+      width: "30%",
       align: "center",
     },
     {
       title: "Email",
       dataIndex: "email",
-      width: "45%",
+      width: "40%",
       align: "center",
     },
     {
       title: "Status",
-      dataIndex: "status",
-      width: "20%",
+      dataIndex: "result",
+      width: "30%",
       align: "center",
-      render: (status) => {
-        return status ? (
-          <CheckCircleOutlined style={{ color: "green" }} />
+      render: (result) => {
+        return result === null ? (
+          <LoadingOutlined />
+        ) : result?.success ? (
+          <CheckCircleOutlined style={{ color: "green", fontSize: "18px" }} />
         ) : (
-          <CloseCircleOutlined style={{ color: "red" }} />
+          <CloseCircleOutlined style={{ color: "red", fontSize: "18px" }} />
         );
       },
     },
@@ -141,7 +178,7 @@ const BulkCertificates = () => {
                 whitespace: true,
                 message: "Batch name cannot be empty spaces",
               },
-              { min: 4, message: "name should be greater than 4 letters" },
+              // { min: 4, message: "name should be greater than 4 letters" },
             ]}
           >
             <Input
@@ -176,24 +213,25 @@ const BulkCertificates = () => {
           </Form.Item>
         </Form>
       </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
         <Table
           columns={columns}
-          dataSource={data}
+          // dataSource={data}
+          dataSource={mailData.map((row, index) => ({ ...row, key: index }))}
           style={{ width: "50%" }}
           pagination={{
             pageSize: 50,
           }}
           scroll={{
-            y: 380,
+            y: 415,
           }}
         />
       </div>
-      <div style={{display:"flex",justifyContent:"center"}}>
+      {/* <div style={{ display: "flex", justifyContent: "center" }}>
         <Button type="primary" htmlType="submit">
           Download all Failed Records
         </Button>
-      </div>
+      </div> */}
 
       {/* <Footer /> */}
       {/* <Button type="primary" onClick={() => setModalVisible(true)}>
