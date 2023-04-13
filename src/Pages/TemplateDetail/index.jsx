@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../Styles/Templatedetail.css";
 import { List, Card, Layout, theme, Button, Table, message } from "antd";
 import HamburgerNavbar from "../../Components/HamburgerNavbar";
@@ -7,13 +7,44 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const TemplateDetail = () => {
   let { id } = useParams();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const [batchData, setBatchData] = useState();
+  const [certificateStatus, setCertificateStatus] = useState(false);
+  const [certificateImageSrc, setCertificateImageSrc] = useState(
+    `http://localhost:8080/template/singletemplate/${id}`
+  );
 
-  const batchData = [
-    { id: 1, batch: "Web 16", count: 141 },
-    { id: 2, batch: "Web 19", count: 92 },
-    { id: 3, batch: "Web 20", count: 108 },
-  ];
+  // const batchData = [
+  //   { id: 1, batch: "Web 16", count: 141 },
+  //   { id: 2, batch: "Web 19", count: 92 },
+  //   { id: 3, batch: "Web 20", count: 108 },
+  // ];
+  useEffect(() => {
+    getAllBatches();
+    checkCertificateAvailableFn();
+  }, [certificateImageSrc]);
+
+  let checkCertificateAvailableFn = () => {
+    fetch(`http://localhost:8080/certificate/certificateimage/${id}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log("data: ", data);
+        if (data.message === "Image not found") {
+          setCertificateStatus(false);
+        }
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        setCertificateStatus(true);
+      });
+    if (certificateStatus) {
+      setCertificateImageSrc(
+        `http://localhost:8080/certificate/certificateimage/${id}`
+      );
+    }
+  };
 
   const columns = [
     {
@@ -23,16 +54,35 @@ const TemplateDetail = () => {
       align: "center",
       width: "15%",
       // sorter: (a, b) => a.id - b.id,
-      render: (text) => <span style={{ color: "#F94A29",fontWeight:"600" }}>{text}</span>,
+      render: (text) => (
+        <span style={{ color: "#F94A29", fontWeight: "600" }}>{text}</span>
+      ),
     },
     {
       title: "Total Certificates count",
-      dataIndex: "count",
-      key: "count",
+      dataIndex: "fieldsLength",
+      key: "fieldsLength",
       align: "center",
       width: "25%",
     },
   ];
+
+  const getAllBatches = () => {
+    fetch(`http://localhost:8080/certificate/certificatedetails/${id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("data: ", data);
+        setBatchData(data);
+      })
+      .catch((error) => {
+        console.error("Error uploading image:", error);
+      });
+  };
 
   const handleDownloadCSV = () => {
     fetch(`http://localhost:8080/certificate/samplecsv/${id}`, {
@@ -62,7 +112,6 @@ const TemplateDetail = () => {
       });
   };
 
-  
   return (
     <>
       <div className="templateDetailMainContainer">
@@ -71,7 +120,11 @@ const TemplateDetail = () => {
           <div className="leftSideCertificateImageBox">
             <img
               width={"100%"}
-              src="/CourseComplitionBlankTemplate.jpg"
+              src={
+                certificateStatus
+                  ? `http://localhost:8080/certificate/certificateimage/${id}`
+                  : certificateImageSrc
+              }
               alt="CourseComplitionBlankTemplate"
             />
           </div>
