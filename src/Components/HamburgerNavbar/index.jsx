@@ -8,7 +8,7 @@ import "../../Styles/HamburgerNav.css";
 const HamburgerNavbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const authDetails = JSON.parse(localStorage.getItem("authDetails"));
-  let firstLetter = authDetails?.userDetails?.name[0];
+  let firstLetter = authDetails?.userDetails?.userName[0];
   firstLetter = firstLetter?.toUpperCase();
   let role=authDetails?.userDetails?.role;
 

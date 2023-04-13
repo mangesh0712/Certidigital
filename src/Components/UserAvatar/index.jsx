@@ -14,7 +14,7 @@ const UserAvatar = () => {
 
   let authDetails = JSON.parse(localStorage.getItem("authDetails"));
   console.log(authDetails);
-  let fullName = authDetails?.userDetails?.name;
+  let fullName = authDetails?.userDetails?.userName;
   let role = authDetails?.userDetails?.role;
   let userFirstName = "User";
   if (fullName.includes(" ")) {
