@@ -51,6 +51,12 @@ const BulkCertificates = () => {
         console.log("data: ", data);
         message.success("CSV file uploaded successfully!");
         getMailStatus();
+        const interval = setInterval(() => {
+          if (!mailData.some((item) => item.result === null)) {
+            clearInterval(interval);
+          }
+          getMailStatus();
+        }, 2000);
       })
       .catch((error) => {
         console.error("Error uploading CSV file:", error);
@@ -58,16 +64,6 @@ const BulkCertificates = () => {
       });
   };
 
-  const startInterval = () => {
-    const id = setInterval(() => {
-      getMailStatus();
-    }, 2000);
-    setIntervalId(id);
-  };
-
-  const stopInterval = () => {
-    clearInterval(intervalId);
-  };
 
   const getMailStatus = () => {
     fetch("http://localhost:8080/batchcertificate/email-status")
@@ -81,12 +77,22 @@ const BulkCertificates = () => {
   };
 
   useEffect(() => {
-    // getMailStatus();
     const interval = setInterval(() => {
+      if (!mailData.some((item) => item.result === null)) {
+        clearInterval(interval);
+      }
       getMailStatus();
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
+  // useEffect(() => {
+  //   // getMailStatus();
+  //   const interval = setInterval(() => {
+  //     getMailStatus();
+  //   }, 2000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const columns = [
     {
@@ -109,7 +115,8 @@ const BulkCertificates = () => {
       render: (result) => {
         return result === null ? (
           <LoadingOutlined />
-        ) : result?.success ? (
+        ) : // ) : result?.success ? (
+        result?.accepted.length >= 1 ? (
           <CheckCircleOutlined style={{ color: "green", fontSize: "18px" }} />
         ) : (
           <CloseCircleOutlined style={{ color: "red", fontSize: "18px" }} />
