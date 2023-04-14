@@ -58,10 +58,10 @@ function Studentview() {
           flexWrap: "wrap",
           gap: "20px",
           marginTop: "20px",
-          justifyContent:"left",
+          justifyContent: "left",
           paddingLeft: "80px",
           minHeight: "60.8vh",
-          marginBottom:20
+          marginBottom: 20,
         }}
       >
         {Array.isArray(data) && data.length > 0
@@ -69,7 +69,7 @@ function Studentview() {
               <Card
                 hoverable
                 style={{
-                  width: "30%"
+                  width: "30%",
                   // minHeight:300,
                   // height: "auto",
                 }}
@@ -98,7 +98,7 @@ function Studentview() {
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <h3>Share</h3>
+                  <h3 style={{ color: "#F94A29" }}>Share:</h3>
                   <div
                     style={{
                       display: "flex",

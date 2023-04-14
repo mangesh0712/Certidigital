@@ -2,6 +2,7 @@ import { Button, Form, Input, InputNumber, Select, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../../Styles/sampleCertificate.css";
+import { DoubleLeftOutlined } from "@ant-design/icons";
 
 const SampleCertificate = () => {
   let { id } = useParams();
@@ -146,9 +147,8 @@ const SampleCertificate = () => {
         console.log("data: ", data);
         message.success("Template with fields Saved successfully",1.5)
         setTimeout(() => {
-          setshowCsvButton(false);
-          message.info("Now you can download the sample CSV for the saved template",4);
-        }, 2500);
+          navigate(`/templateDetail/${id}`)
+        }, 1500);
       })
       .catch((err) => {
         console.log("err: ", err);
@@ -400,10 +400,19 @@ const SampleCertificate = () => {
             >
               Save Template
             </Button>
+            <Button
+              style={{
+                fontWeight: 600,
+              }}
+              onClick={() => navigate(`/sampleTemplate`)}
+              icon={<DoubleLeftOutlined />}
+            >
+              Back
+            </Button>
           </div>
           <div>
-            <div className="submitcsvDiv">
-              <Button
+            {/* <div className="submitcsvDiv"> */}
+            {/* <Button
                 type="primary"
                 block
                 style={{
@@ -413,8 +422,8 @@ const SampleCertificate = () => {
                 onClick={() => handleDownloadCSV(shapes)}
               >
                 Download sample CSV
-              </Button>
-              <Button
+              </Button> */}
+            {/* <Button
                 style={{
                   background: "#1F2937",
                   color: "White",
@@ -425,8 +434,8 @@ const SampleCertificate = () => {
                 onClick={() => navigate(`/bulkCertificates/${id}`)}
               >
                 Upload CSV
-              </Button>
-            </div>
+              </Button> */}
+            {/* </div> */}
             <p style={{ color: "gray", textAlign: "left", marginLeft: 10 }}>
               Before saving, please make sure you have added all the required
               fields.
@@ -560,8 +569,8 @@ const SampleCertificate = () => {
                         <InputNumber />
                       </Form.Item>
                     </div>
-                    <Form.Item 
-                      // extra="Please give the 'Field Name' same as the csv file field names."
+                    <Form.Item
+                    // extra="Please give the 'Field Name' same as the csv file field names."
                     >
                       <div
                         className="FieldTextMainDiv"

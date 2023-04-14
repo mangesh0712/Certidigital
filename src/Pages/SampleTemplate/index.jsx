@@ -135,7 +135,12 @@ const SampleTemplate = () => {
       align: "center",
       width: "25%",
       render: (text, record) => (
-        <Link to={`/templatedetail/${record.id}`}>{text}</Link>
+        <Link
+          to={`/templatedetail/${record.id}`}
+          onClick={() => localStorage.setItem("record", JSON.stringify(record))}
+        >
+          {text}
+        </Link>
       ),
     },
     {

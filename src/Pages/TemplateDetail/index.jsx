@@ -4,16 +4,18 @@ import { List, Card, Layout, theme, Button, Table, message } from "antd";
 import HamburgerNavbar from "../../Components/HamburgerNavbar";
 import Footer from "../../Components/Footer";
 import { useNavigate, useParams } from "react-router-dom";
+import { DoubleLeftOutlined } from "@ant-design/icons";
 
 const TemplateDetail = () => {
   let { id } = useParams();
   const navigate = useNavigate();
   const [batchData, setBatchData] = useState();
   const [certificateStatus, setCertificateStatus] = useState(false);
+  const [showCsvButton, setshowCsvButton] = useState(true);
   const [certificateImageSrc, setCertificateImageSrc] = useState(
     `http://localhost:8080/template/singletemplate/${id}`
   );
-
+  const record = JSON.parse(localStorage.getItem("record"));
   // const batchData = [
   //   { id: 1, batch: "Web 16", count: 141 },
   //   { id: 2, batch: "Web 19", count: 92 },
@@ -38,6 +40,7 @@ const TemplateDetail = () => {
       .catch((err) => {
         console.log("err: ", err);
         setCertificateStatus(true);
+        setshowCsvButton(false);
       });
     if (certificateStatus) {
       setCertificateImageSrc(
@@ -100,8 +103,8 @@ const TemplateDetail = () => {
           const url = URL.createObjectURL(data);
           const a = document.createElement("a");
           a.href = url;
-          // let TemplateName = record?.name;
-          a.download = `Sample.csv`;
+          let TemplateName = record?.name;
+          a.download = `${TemplateName} Sample.csv`;
           document.body.appendChild(a);
           a.click();
         }, 1000);
@@ -118,6 +121,19 @@ const TemplateDetail = () => {
         <HamburgerNavbar />
         <div className="templateDetailContainer">
           <div className="leftSideCertificateImageBox">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                fontWeight: 600,
+                marginBottom: 10,
+              }}
+            >
+              <div>
+                <span style={{ color: "#F94A29" }}>Template:</span>{" "}
+                {record?.name}
+              </div>
+            </div>
             <img
               width={"100%"}
               src={
@@ -136,22 +152,36 @@ const TemplateDetail = () => {
                 style={{
                   fontWeight: 600,
                 }}
-                // disabled={showCsvButton}
+                disabled={showCsvButton}
                 onClick={() => handleDownloadCSV()}
               >
                 Download sample CSV
               </Button>
               <Button
                 style={{
-                  background: "#1F2937",
-                  color: "White",
-                  fontWeight: 600,
+                  ...(showCsvButton
+                    ? { fontWeight: 600 }
+                    : {
+                        background: "#1F2937",
+                        color: "White",
+                        fontWeight: 600,
+                      }),
                 }}
                 type="primary"
+                disabled={showCsvButton}
                 block
                 onClick={() => navigate(`/bulkCertificates/${id}`)}
               >
                 Generate Batch Certificate
+              </Button>
+              <Button
+                style={{
+                  fontWeight: 600,
+                }}
+                onClick={() => navigate(`/sampleTemplate`)}
+                icon={<DoubleLeftOutlined />}
+              >
+                Back
               </Button>
             </div>
             <Table
