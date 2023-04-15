@@ -58,25 +58,25 @@ function Studentview() {
           flexWrap: "wrap",
           gap: "20px",
           marginTop: "20px",
-          justifyContent: "left",
-          paddingLeft: "80px",
-          minHeight: "60.8vh",
+          justifyContent: "center",
+          minHeight: "57.9vh",
           marginBottom: 20,
         }}
       >
         {Array.isArray(data) && data.length > 0
           ? data.map((item) => (
               <Card
+                key={item.id}
                 hoverable
                 style={{
-                  width: "30%",
-                  // minHeight:300,
-                  // height: "auto",
+                  width: "auto",
+                  height: data.length <= 4 ? 330 : "auto",
                 }}
                 cover={
                   <Image
                     src={`http://localhost:8080/student/certificateimages/${item.id}`}
-                    alt={`${item.name}`}
+                    alt={`${item.batch}`}
+                    style={{ width: 350 }}
                     preview={{
                       mask: (
                         <div style={{ background: "rgba(0, 0, 0, 0.5)" }} />
@@ -92,7 +92,7 @@ function Studentview() {
                     color: "green",
                   }}
                 >
-                  <Meta title={item.name} />
+                  <Meta title={item.batch} />
                   {/* <Button>Share</Button> */}
                 </div>
                 <div
@@ -110,41 +110,25 @@ function Studentview() {
                       url={`http://localhost:8080/student/certificateimages/${item.id}`}
                       quote={item.name}
                     >
-                      <FacebookIcon
-                        logoFillColor="white"
-                        round={true}
-                        size={40}
-                      ></FacebookIcon>
+                      <FacebookIcon round={true} size={40}></FacebookIcon>
                     </FacebookShareButton>
                     <WhatsappShareButton
                       url={`http://localhost:8080/student/certificateimages/${item.id}`}
                       title={item.name}
                     >
-                      <WhatsappIcon
-                        logoFillColor="white"
-                        round={true}
-                        size={40}
-                      />
+                      <WhatsappIcon round={true} size={40} />
                     </WhatsappShareButton>
                     <TwitterShareButton
                       url={`http://localhost:8080/student/certificateimages/${item.id}`}
                       title={item.name}
                     >
-                      <TwitterIcon
-                        logoFillColor="white"
-                        round={true}
-                        size={40}
-                      />
+                      <TwitterIcon round={true} size={40} />
                     </TwitterShareButton>
                     <LinkedinShareButton
                       url={`http://localhost:8080/student/certificateimages/${item.id}`}
                       title={item.name}
                     >
-                      <LinkedinIcon
-                        logoFillColor="white"
-                        round={true}
-                        size={40}
-                      />
+                      <LinkedinIcon round={true} size={40} />
                     </LinkedinShareButton>
                   </div>
                 </div>
