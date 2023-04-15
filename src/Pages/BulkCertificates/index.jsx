@@ -15,9 +15,6 @@ const BulkCertificates = () => {
   const [batchName, setBatchName] = useState("");
   const [csvFile, setCsvFile] = useState("");
   const [mailData, setMailData] = useState([]);
-  const [allMailSentCheck, setAllMailSentCheck] = useState(false);
-  const [intervalId, setIntervalId] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const handleBatchName = (e) => {
     const { value } = e.target;
@@ -28,7 +25,8 @@ const BulkCertificates = () => {
     setCsvFile(e.target.files[0]);
   };
 
-  const handleUploadCSV = (e) => {
+
+  const handleUploadCSV = async (e) => {
     console.log("csvFile: ", csvFile);
 
     const formData = new FormData();
@@ -37,62 +35,52 @@ const BulkCertificates = () => {
     formData.append("batch", batchName);
     console.log("formdata", formData);
 
-    fetch(`http://localhost:8080/batchcertificate/certificate/batch/${id}`, {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        // if (!response.ok) {
-        //   throw new Error("Network response was not ok", response);
-        // }
-        return response.text();
-      })
-      .then((data) => {
-        console.log("data: ", data);
-        message.success("CSV file uploaded successfully!");
-        getMailStatus();
-        const interval = setInterval(() => {
-          if (!mailData.some((item) => item.result === null)) {
-            clearInterval(interval);
-          }
-          getMailStatus();
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error("Error uploading CSV file:", error);
-        message.error("Error uploading CSV file!");
-      });
+    try {
+      const response = await fetch(
+        `http://localhost:8080/batchcertificate/certificate/batch/${id}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.text();
+
+      console.log("data: ", data);
+      message.success("CSV file uploaded successfully!");
+
+      const mailData = await getMailStatus();
+      setMailData(mailData);
+
+      const interval = setInterval(async () => {
+        const updatedMailData = await getMailStatus();
+        setMailData(updatedMailData);
+
+        if (!updatedMailData.some((item) => item.result === null)) {
+          clearInterval(interval);
+          console.log("Inside clear");
+        } else {
+          console.log("continue");
+        }
+      }, 2000);
+    } catch (error) {
+      console.error("Error uploading CSV file:", error);
+      message.error("Error uploading CSV file!");
+    }
   };
 
-
-  const getMailStatus = () => {
-    fetch("http://localhost:8080/batchcertificate/email-status")
-      .then((res) => res.json())
-      .then((data) => {
-        setMailData(data);
-        console.log("data: ", data);
-        setLoading(data.some((item) => item.result === null));
-      })
-      .catch((err) => console.log("err: ", err));
+  const getMailStatus = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/batchcertificate/email-status"
+      );
+      const data = await response.json();
+      console.log("data: ", data);
+      return data;
+    } catch (err) {
+      console.log("err: ", err);
+      return [];
+    }
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!mailData.some((item) => item.result === null)) {
-        clearInterval(interval);
-      }
-      getMailStatus();
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // useEffect(() => {
-  //   // getMailStatus();
-  //   const interval = setInterval(() => {
-  //     getMailStatus();
-  //   }, 2000);
-  //   return () => clearInterval(interval);
-  // }, []);
 
   const columns = [
     {
@@ -116,7 +104,7 @@ const BulkCertificates = () => {
         return result === null ? (
           <LoadingOutlined />
         ) : // ) : result?.success ? (
-        result?.accepted.length >= 1 ? (
+        result?.accepted.length >= 1 || result?.success ? (
           <CheckCircleOutlined style={{ color: "green", fontSize: "18px" }} />
         ) : (
           <CloseCircleOutlined style={{ color: "red", fontSize: "18px" }} />
@@ -134,30 +122,6 @@ const BulkCertificates = () => {
       status: status,
     });
   }
-  //   setCsvFile(null);
-
-  // try {
-  //   const response = await fetch("/api/certificates/bulk-generate", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   if (!response.ok) {
-  //     throw new Error(response.statusText);
-  //   }
-
-  //   const data = await response.json();
-
-  //   if (data.errors.length > 0) {
-  //     // Display error details and allow user to download a CSV file with the error details
-  //   } else {
-  //     message.success(`${data.count} certificates generated successfully!`);
-  //     setModalVisible(false);
-  //   }
-  // } catch (err) {
-  //   console.error(err);
-  //   message.error("An error occurred while generating certificates.");
-  // }
 
   return (
     <>
@@ -234,53 +198,6 @@ const BulkCertificates = () => {
           }}
         />
       </div>
-      {/* <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button type="primary" htmlType="submit">
-          Download all Failed Records
-        </Button>
-      </div> */}
-
-      {/* <Footer /> */}
-      {/* <Button type="primary" onClick={() => setModalVisible(true)}>
-        Bulk Certificate Generation
-      </Button>
-      <Modal
-        title="Bulk Certificate Generation"
-        open={modalVisible}
-        onCancel={handleModalCancel}
-        footer={[
-          <Button key="cancel" onClick={handleModalCancel}>
-            Cancel
-          </Button>,
-          <Button
-            key="generate"
-            type="primary"
-            htmlType="submit"
-            onClick={handleUpload}
-            disabled={!csvFile}
-          >
-            Generate Certificates
-          </Button>,
-        ]}
-        form={form}
-      >
-        <Form
-          name="uploadCsv"
-          onFinish={handleUpload}
-          encType="multipart/form-data"
-          form={form}
-        >
-          <Form.Item name="csv">
-            <Input
-              className="inputBox"
-              id="image-upload"
-              type="file"
-              accept=".csv"
-              onChange={handleCsvFile}
-            />
-          </Form.Item>
-        </Form>
-      </Modal> */}
     </>
   );
 };
