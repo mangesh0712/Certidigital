@@ -16,11 +16,25 @@ const TemplateDetail = () => {
     `http://localhost:8080/template/singletemplate/${id}`
   );
   const record = JSON.parse(localStorage.getItem("record"));
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(13);
   // const batchData = [
   //   { id: 1, batch: "Web 16", count: 141 },
   //   { id: 2, batch: "Web 19", count: 92 },
   //   { id: 3, batch: "Web 20", count: 108 },
   // ];
+
+  const handleTableChange = (pagination, filters, sorter) => {
+    setCurrentPage(pagination.current);
+    setPageSize(pagination.pageSize);
+  };
+
+  const paginatedData = batchData?.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+
   useEffect(() => {
     getAllBatches();
     checkCertificateAvailableFn();
@@ -53,7 +67,6 @@ const TemplateDetail = () => {
     {
       title: "Batch",
       dataIndex: "batch",
-      key: "batch",
       align: "center",
       width: "15%",
       // sorter: (a, b) => a.id - b.id,
@@ -64,7 +77,6 @@ const TemplateDetail = () => {
     {
       title: "Total Certificates count",
       dataIndex: "fieldsLength",
-      key: "fieldsLength",
       align: "center",
       width: "25%",
     },
@@ -145,7 +157,7 @@ const TemplateDetail = () => {
             />
           </div>
           <div className="rightSideDetailsContainer">
-            <div className="submitcsvDiv">
+            <div className="submitcsvDivContainer">
               <Button
                 type="primary"
                 block
@@ -187,10 +199,20 @@ const TemplateDetail = () => {
             <Table
               style={{ minHeight: "61.2vh" }}
               columns={columns}
-              dataSource={batchData}
-              rowKey={(record) => record.id}
+              dataSource={
+                batchData &&
+                batchData.map((row, index) => ({
+                  ...row,
+                  key: index,
+                }))
+              }
               size="small"
-              pagination={false}
+              pagination={{
+                current: currentPage,
+                pageSize: pageSize,
+                total: batchData?.length,
+              }}
+              onChange={handleTableChange}
             ></Table>
           </div>
         </div>
