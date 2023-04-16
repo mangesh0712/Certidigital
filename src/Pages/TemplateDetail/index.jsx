@@ -17,7 +17,7 @@ const TemplateDetail = () => {
   );
   const record = JSON.parse(localStorage.getItem("record"));
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(13);
+  const [pageSize, setPageSize] = useState(12);
   // const batchData = [
   //   { id: 1, batch: "Web 16", count: 141 },
   //   { id: 2, batch: "Web 19", count: 92 },
