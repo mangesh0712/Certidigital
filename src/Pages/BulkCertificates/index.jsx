@@ -57,11 +57,15 @@ const BulkCertificates = () => {
 
         if (!updatedMailData.some((item) => item.result === null)) {
           clearInterval(interval);
+          message.success(
+            "All emails have been successfully sent to each students!",8
+          );
           console.log("Inside clear");
         } else {
           console.log("continue");
+          message.loading("Mail sending in progress..",5);
         }
-      }, 2000);
+      }, 5000);
     } catch (error) {
       console.error("Error uploading CSV file:", error);
       message.error("Error uploading CSV file!");
