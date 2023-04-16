@@ -1,8 +1,4 @@
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-    <img src="/public/Masailogo.svg" alt="Logo" width="120" >
-</p>
+
 
 <h1 align="center">Certidigital</h1>
 <h3 align="center">
