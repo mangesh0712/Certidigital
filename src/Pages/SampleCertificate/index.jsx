@@ -6,6 +6,8 @@ import { DoubleLeftOutlined } from "@ant-design/icons";
 
 const SampleCertificate = () => {
   let { id } = useParams();
+  const authDetails = JSON.parse(localStorage.getItem("authDetails"));
+  let token = authDetails?.token;
 
   const canvasRef = useRef(null);
   const [shapes, setShapes] = useState([
@@ -37,22 +39,7 @@ const SampleCertificate = () => {
   const [canvasHeight, setCanvasHeight] = useState();
   const [canvasWidth, setCanvasWidth] = useState();
   const [showCsvButton, setshowCsvButton] = useState(true);
-  const navigate=useNavigate();
-
-  // const fetchSingleTemplate = () => {
-  //   axios
-  //     .get(`http://localhost:8080/certificate/getSingleTemplate/${id}`)
-  //     .then((res) => {
-  //       console.log("res.data: ", res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error:", err);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   fetchSingleTemplate();
-  // }, []);
+  const navigate = useNavigate();
 
   const addShape = () => {
     setshowCsvButton(true);
@@ -124,7 +111,6 @@ const SampleCertificate = () => {
 
   // save Feilds API
   const handleFieldsData = (shapes) => {
-    
     let payload = {
       template: id,
       fields: shapes,
@@ -137,6 +123,7 @@ const SampleCertificate = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     })
@@ -145,38 +132,10 @@ const SampleCertificate = () => {
       })
       .then((data) => {
         console.log("data: ", data);
-        message.success("Template with fields Saved successfully",1.5)
+        message.success("Template with fields Saved successfully", 1.5);
         setTimeout(() => {
-          navigate(`/templateDetail/${id}`)
+          navigate(`/templateDetail/${id}`);
         }, 1500);
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-        message.error("Error saving the fields")
-      });
-  };
-
-  const handleDownloadCSV = () => {
-    fetch(`http://localhost:8080/certificate/samplecsv/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.blob();
-      })
-      .then((data) => {
-        message.success("Downloading the Sample CSV file", 1.5);
-        setTimeout(() => {
-          const url = URL.createObjectURL(data);
-          const a = document.createElement("a");
-          a.href = url;
-          let TemplateName = record?.name;
-          a.download = `${TemplateName} Sample.csv`;
-          document.body.appendChild(a);
-          a.click();
-        }, 1000);
       })
       .catch((err) => {
         console.log("err: ", err);
@@ -188,8 +147,8 @@ const SampleCertificate = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    canvas.style.width = "900px"; // Set the width of the canvas to 50%
-    canvas.width = canvas.offsetWidth; // Set the width of the canvas to its offsetWidth
+    canvas.style.width = "900px";
+    canvas.width = canvas.offsetWidth;
     // canvas.style.border = "5px solid black";
     const aspectRatio = templateWidth / templateHeight;
     canvas.height = Math.floor(canvas.width / aspectRatio);
@@ -411,31 +370,6 @@ const SampleCertificate = () => {
             </Button>
           </div>
           <div>
-            {/* <div className="submitcsvDiv"> */}
-            {/* <Button
-                type="primary"
-                block
-                style={{
-                  fontWeight: 600,
-                }}
-                disabled={showCsvButton}
-                onClick={() => handleDownloadCSV(shapes)}
-              >
-                Download sample CSV
-              </Button> */}
-            {/* <Button
-                style={{
-                  background: "#1F2937",
-                  color: "White",
-                  fontWeight: 600,
-                }}
-                type="primary"
-                block
-                onClick={() => navigate(`/bulkCertificates/${id}`)}
-              >
-                Upload CSV
-              </Button> */}
-            {/* </div> */}
             <p style={{ color: "gray", textAlign: "left", marginLeft: 10 }}>
               Before saving, please make sure you have added all the required
               fields.

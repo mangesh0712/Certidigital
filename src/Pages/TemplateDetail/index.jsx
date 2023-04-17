@@ -16,6 +16,8 @@ const TemplateDetail = () => {
     `http://localhost:8080/template/singletemplate/${id}`
   );
   const record = JSON.parse(localStorage.getItem("record"));
+  const authDetails = JSON.parse(localStorage.getItem("authDetails"));
+  let token = authDetails?.token;
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
   // const batchData = [
@@ -34,14 +36,17 @@ const TemplateDetail = () => {
     currentPage * pageSize
   );
 
-
   useEffect(() => {
     getAllBatches();
     checkCertificateAvailableFn();
   }, [certificateImageSrc]);
 
   let checkCertificateAvailableFn = () => {
-    fetch(`http://localhost:8080/certificate/certificateimage/${id}`)
+    fetch(`http://localhost:8080/certificate/certificateimage/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
         return res.json();
       })
@@ -83,7 +88,11 @@ const TemplateDetail = () => {
   ];
 
   const getAllBatches = () => {
-    fetch(`http://localhost:8080/certificate/certificatedetails/${id}`)
+    fetch(`http://localhost:8080/certificate/certificatedetails/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -104,6 +113,7 @@ const TemplateDetail = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {

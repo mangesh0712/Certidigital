@@ -16,6 +16,9 @@ const BulkCertificates = () => {
   const [csvFile, setCsvFile] = useState("");
   const [mailData, setMailData] = useState([]);
 
+  const authDetails = JSON.parse(localStorage.getItem("authDetails"));
+  let token = authDetails?.token;
+
   const handleBatchName = (e) => {
     const { value } = e.target;
     setBatchName(value);
@@ -24,7 +27,6 @@ const BulkCertificates = () => {
   const handleCsvFile = (e) => {
     setCsvFile(e.target.files[0]);
   };
-
 
   const handleUploadCSV = async (e) => {
     console.log("csvFile: ", csvFile);
@@ -40,6 +42,9 @@ const BulkCertificates = () => {
         `http://localhost:8080/batchcertificate/certificate/batch/${id}`,
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
         }
       );
@@ -52,20 +57,55 @@ const BulkCertificates = () => {
       setMailData(mailData);
 
       const interval = setInterval(async () => {
-        const updatedMailData = await getMailStatus();
-        setMailData(updatedMailData);
+        try {
+          const updatedMailData = await getMailStatus();
+          setMailData(updatedMailData);
 
-        if (!updatedMailData.some((item) => item.result === null)) {
-          clearInterval(interval);
-          message.success(
-            "All emails have been successfully sent to each students!",8
-          );
-          console.log("Inside clear");
-        } else {
-          console.log("continue");
-          message.loading("Mail sending in progress..",5);
-        }
+          if (
+            updatedMailData &&
+            !updatedMailData.some((item) => item.result === null)
+          ) {
+            clearInterval(interval);
+            message.success(
+              "All emails have been successfully sent to each students!",
+              8
+            );
+            console.log("Inside clear");
+          } else {
+            console.log("continue");
+            message.loading("Mail sending in progress..", 5);
+          }
+        } catch (error) {
+          console.log("err: ", error);
+          message.error("Error fetching mail status!");
+        } 
+        // finally {
+        //   const updatedMailData = await getMailStatus();
+        //   if (
+        //     updatedMailData &&
+        //     !updatedMailData.some((item) => item.result === null)
+        //   ) {
+        //     clearInterval(interval);
+        //   }
+        // }
       }, 5000);
+
+      // const interval = setInterval(async () => {
+      //   const updatedMailData = await getMailStatus();
+      //   setMailData(updatedMailData);
+
+      //   if (!updatedMailData.some((item) => item.result === null)) {
+      //     clearInterval(interval);
+      //     message.success(
+      //       "All emails have been successfully sent to each students!",
+      //       8
+      //     );
+      //     console.log("Inside clear");
+      //   } else {
+      //     console.log("continue");
+      //     message.loading("Mail sending in progress..", 5);
+      //   }
+      // }, 5000);
     } catch (error) {
       console.error("Error uploading CSV file:", error);
       message.error("Error uploading CSV file!");
@@ -75,7 +115,12 @@ const BulkCertificates = () => {
   const getMailStatus = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8080/batchcertificate/email-status"
+        "http://localhost:8080/batchcertificate/email-status",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const data = await response.json();
       console.log("data: ", data);

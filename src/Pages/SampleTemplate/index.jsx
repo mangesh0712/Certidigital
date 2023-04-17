@@ -19,8 +19,9 @@ const SampleTemplate = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [page, setPage] = useState(1);
   const [pageSize, setpageSize] = useState(5);
-
   const navigate = useNavigate();
+  const authDetails = JSON.parse(localStorage.getItem("authDetails"));
+  let token = authDetails?.token;
 
   const handleTemplateName = (e) => {
     const { value } = e.target;
@@ -40,6 +41,9 @@ const SampleTemplate = () => {
 
     fetch("http://localhost:8080/template/uploadtemplate", {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: formData,
     })
       .then((response) => {
@@ -67,7 +71,11 @@ const SampleTemplate = () => {
 
   const fetchTemplates = () => {
     axios
-      .get("http://localhost:8080/template/alltemplates")
+      .get("http://localhost:8080/template/alltemplates", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         // console.log("res.data: ", res.data);
         setTemplates(res.data);
@@ -95,7 +103,14 @@ const SampleTemplate = () => {
       cancelText: "No",
       onOk() {
         axios
-          .delete(`http://localhost:8080/template/deletetemplate/${record.id}`)
+          .delete(
+            `http://localhost:8080/template/deletetemplate/${record.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
           .then((res) => {
             console.log("res: ", res);
             if (res.data.message === "Error deleting image from disk") {
@@ -227,7 +242,12 @@ const SampleTemplate = () => {
       const values = await form.validateFields();
       await axios.patch(
         `http://localhost:8080/template/updatetemplate/${selectedProduct.id}`,
-        values
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setIsModalVisible(false);
       message.success("Template name renamed successfully");
