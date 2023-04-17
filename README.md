@@ -37,7 +37,7 @@
 
 <a href="https://docs.google.com/document/d/1uM4GGe75thJbfEOWeETxDPJqJXx4b0xGXqwMeMfPz1c/edit?usp=sharing" target="_blank">PRD</a>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://drive.google.com/file/d/1ruyvUA4DsRTLm2NK55Fm_RtKaHEDQ-7V/view?usp=share_link" target="_blank">HLD</a>
+<a href="https://drive.google.com/file/d/1aRXc0VokWbwq7GoKljW-XSpPgIJpVxzw/view?usp=share_link" target="_blank">HLD</a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="https://docs.google.com/document/d/1iQmorcO_8JAweHCPlkXHV_vVNkKN7WLIf1nZZB4AHR8/edit?usp=sharing" target="_blank">Coding Practices</a>
 
