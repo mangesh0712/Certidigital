@@ -226,7 +226,7 @@ const TemplateDetail = () => {
             ></Table>
           </div>
         </div>
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </>
   );
