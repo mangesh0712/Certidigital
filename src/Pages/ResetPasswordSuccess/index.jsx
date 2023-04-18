@@ -23,7 +23,7 @@ const ResetPasswordSuccess = () => {
               <p>You can now log in and start using our platform.</p>
               <Button
                 type="primary"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/")}
                 style={{ width: "50%", marginLeft: 45 }}
               >
                 Click here to login

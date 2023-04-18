@@ -25,7 +25,7 @@ const ResetPassword = () => {
             5
           );
           setTimeout(() => {
-            navigate("/login");
+            navigate("/");
           }, 3000);
         }
         setResetPasswordFormLoading(false);

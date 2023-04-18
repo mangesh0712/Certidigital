@@ -290,7 +290,7 @@ const Signup = () => {
                     block
                     type="primary"
                     onClick={() => {
-                      navigate("/login");
+                      navigate("/");
                     }}
                   >
                     I already have an account

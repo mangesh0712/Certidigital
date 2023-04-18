@@ -27,7 +27,7 @@ const UserAvatar = () => {
   // const handleLogoutFn=()=>{
   //   setShowLogout(false);
   //   setTimeout(() => {
-  //     navigate("/login");
+  //     navigate("/");
   //     const logout=localStorage.removeItem("authDetails");
   //     console.log("logout", logout);
   //     message.success("You are succesfully Logged out from your account",3)
@@ -44,7 +44,7 @@ const UserAvatar = () => {
       cancelText: "No",
       onOk() {
         setTimeout(() => {
-          navigate("/login");
+          navigate("/");
           const logout = localStorage.removeItem("authDetails");
           console.log("logout", logout);
           message.success(

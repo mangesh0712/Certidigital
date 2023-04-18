@@ -10,7 +10,7 @@ const AdminRoutes = (props) => {
     let authDetails = JSON.parse(localStorage.getItem("authDetails"));
     console.log("authDetails", authDetails);
     if (!authDetails?.token) {
-      navigate("/login");
+      navigate("/");
     }
     if (authDetails?.userDetails?.role === "Student") {
       message.destroy();

@@ -23,7 +23,7 @@ const ChangePassword = () => {
             5
           );
           setTimeout(() => {
-            navigate("/login");
+            navigate("/");
           }, 3000);
         }
         setChangePasswordFormLoading(false);

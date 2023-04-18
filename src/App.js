@@ -22,10 +22,10 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Signup />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/confirmAccount" element={<ConfirmAccount />} />
         <Route path="/confirmSuccess/:id" element={<ConfirmSuccess />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/csvTojson/:id" element={<Csvtojson />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route

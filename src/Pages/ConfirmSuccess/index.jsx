@@ -23,7 +23,7 @@ const ConfirmSuccess = () => {
             4
           );
           setTimeout(() => {
-            navigate("/login");
+            navigate("/");
           }, 2000);
         }
         setConfirmSuccessLoading(false);

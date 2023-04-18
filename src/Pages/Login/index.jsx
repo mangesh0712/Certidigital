@@ -213,7 +213,7 @@ const Login = () => {
                     block
                     type="primary"
                     onClick={() => {
-                      navigate("/");
+                      navigate("/signup");
                     }}
                   >
                     Don't have account, Create Here
