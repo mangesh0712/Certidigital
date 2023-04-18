@@ -32,6 +32,8 @@
 
 ## About The Project
 
+Previously, Masai School used to create certificates for students' achievements manually with the help of Google Sheets which consumed a lot of time. In order to overcome this dependency on Google Sheets and reduce manual efforts, we created a website so that the Masai School team could create certificates in bulk and send them to their respective student’s email.
+
 
 ### Artefacts
 
