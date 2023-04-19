@@ -1,8 +1,14 @@
 
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+    <img src="/public/Images/Masailogo.svg" alt="Logo" width="120" >
+</p>
+
 
 <h1 align="center">Certidigital</h1>
 <h3 align="center">
-	<a href="https://xxx.netlify.app/">Live URL</a>
+	<a href="https://certidigital.netlify.app/">Live URL</a>
 </h3>
 
 <!-- TABLE OF CONTENTS -->
@@ -31,6 +37,10 @@
 </details>
 
 ## About The Project
+
+<div align="center">
+    <img src="/public/Images/CertiDigital%20Hero%20Image.png" alt="Logo" width="100%" >
+</div>
 
 Previously, Masai School used to create certificates for students' achievements manually with the help of Google Sheets which consumed a lot of time. In order to overcome this dependency on Google Sheets and reduce manual efforts, we created a website so that the Masai School team could create certificates in bulk and send them to their respective student’s email.
 
