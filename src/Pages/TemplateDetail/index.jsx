@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../../Styles/Templatedetail.css";
-import { List, Card, Layout, theme, Button, Table, message } from "antd";
+import { Button, Table, message } from "antd";
 import HamburgerNavbar from "../../Components/HamburgerNavbar";
 import Footer from "../../Components/Footer";
 import { useNavigate, useParams } from "react-router-dom";

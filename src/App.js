@@ -1,4 +1,3 @@
-import Csvtojson from "./Pages/csvTojson/Csvtojson";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Signup from "./Pages/Signup";
@@ -26,7 +25,6 @@ function App() {
         <Route path="/confirmAccount" element={<ConfirmAccount />} />
         <Route path="/confirmSuccess/:id" element={<ConfirmSuccess />} />
         <Route path="/" element={<Login />} />
-        <Route path="/csvTojson/:id" element={<Csvtojson />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route
           path="/forgotPasswordMailSent"
