@@ -61,10 +61,6 @@ Previously, Masai School used to create certificates for students' achievements 
 
 Admin will generates certificates for users for their achievements and sends them to their respective emails and student will view their certificates and they can share them on social media platforms. 
 
-**Vision:**
-
-
-
 **Goals:**
 
 - To reduce the manual efforts and dependency on google sheets.
